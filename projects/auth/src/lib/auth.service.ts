@@ -14,10 +14,20 @@ export class AuthService implements AuthAPI {
   _httpClient = inject(HttpClient);
   _authAPIAdaptorService = inject(AuthAPIAdaptorService);
   
+  register(data: any): Observable<any> {
+    return this._httpClient.post(AuthEndPoint.REGISTER, data)
+      .pipe(
+        map((response: any) => this._authAPIAdaptorService.adapt(response)),
+        catchError(err => of(err))
+      );
+  }
+
   login(data: any): Observable<any> {
     return this._httpClient.post(AuthEndPoint.LOGIN, data)
-      .pipe(map((response: any) => this._authAPIAdaptorService.adapt(response)),
-      catchError(err => of(err))); // Another way to handle error is to use catchError((error: any) => throwError(() => new Error(error.message))));
+      .pipe(
+        map((response: any) => this._authAPIAdaptorService.adapt(response)),
+        catchError(err => of(err))
+      );
   }
   
 }

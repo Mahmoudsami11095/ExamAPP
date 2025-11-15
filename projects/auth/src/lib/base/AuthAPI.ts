@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 
 
 export abstract class AuthAPI {
-  //abstract register(data: any): Observable<any>;
+  abstract register(data: any): Observable<any>;
   abstract login(data: any): Observable<any>;
   //abstract changePassword(data: any): Observable<any>;
   //abstract deleteMyAccount(data: any): Observable<any>;

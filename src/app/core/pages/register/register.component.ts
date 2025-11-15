@@ -1,0 +1,152 @@
+import { Component, inject } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from 'auth';
+import { AuthPromo } from '../../../shared/components/UI/auth-promo/auth-promo';
+
+@Component({
+  selector: 'app-register',
+  standalone: true,
+  imports: [ReactiveFormsModule, RouterLink, AuthPromo],
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css'
+})
+export class RegisterComponent {
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  registerForm: FormGroup = this.fb.group({
+    firstName: ['', [Validators.required, Validators.minLength(2)]],
+    lastName: ['', [Validators.required, Validators.minLength(2)]],
+    username: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required]]
+  }, {
+    validators: this.passwordMatchValidator
+  });
+
+  isLoading = false;
+  errorMessage = '';
+  successMessage = '';
+  showPassword = false;
+  showConfirmPassword = false;
+
+  selectedCountryCode = 'EG';
+  countryCode = '+20';
+  phoneNumber = '';
+
+  passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+    
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      return { passwordMismatch: true };
+    }
+    return null;
+  }
+
+  get firstName() {
+    return this.registerForm.get('firstName');
+  }
+
+  get lastName() {
+    return this.registerForm.get('lastName');
+  }
+
+  get username() {
+    return this.registerForm.get('username');
+  }
+
+  get email() {
+    return this.registerForm.get('email');
+  }
+
+  get phone() {
+    return this.registerForm.get('phone');
+  }
+
+  get password() {
+    return this.registerForm.get('password');
+  }
+
+  get confirmPassword() {
+    return this.registerForm.get('confirmPassword');
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  onSubmit() {
+    if (this.registerForm.valid) {
+      this.isLoading = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+
+      const { firstName, lastName, username, email, phone, password, confirmPassword } = this.registerForm.value;
+
+      const registerData = {
+        username,
+        firstName,
+        lastName,
+        email,
+        password,
+        rePassword: confirmPassword,
+        phone
+      };
+
+      this.authService.register(registerData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          
+          // Check if response has a token (successful registration)
+          if (response && response.token) {
+            this.successMessage = response.message || 'Registration successful! Redirecting to login...';
+            this.errorMessage = '';
+            // TODO: Store token if needed
+            console.log('Registration successful:', response);
+            
+            // Redirect to login after 2 seconds
+            setTimeout(() => {
+              this.router.navigate(['/auth/login'], { queryParams: { registered: 'true' } });
+            }, 2000);
+          } else {
+            // Response without token (error from server)
+            this.errorMessage = response?.message || 'Registration failed. Please try again.';
+            this.successMessage = '';
+            console.log('Registration Failed:', response);
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          
+          // Handle HTTP errors
+          if (error.status === 400) {
+            this.errorMessage = error.error?.message || 'Invalid request. Please check your input and try again.';
+          } else if (error.status === 409) {
+            this.errorMessage = error.error?.message || 'User already exists. Please try logging in.';
+          } else if (error.status === 500) {
+            this.errorMessage = 'Server error. Please try again later.';
+          } else if (error.status === 0 || !error.status) {
+            this.errorMessage = 'Network error. Please check your internet connection and try again.';
+          } else {
+            this.errorMessage = error.error?.message || error.message || 'An error occurred. Please try again.';
+          }
+          
+          this.successMessage = '';
+          console.error('Registration error:', error);
+        }
+      });
+    } else {
+      this.registerForm.markAllAsTouched();
+    }
+  }
+}
+
