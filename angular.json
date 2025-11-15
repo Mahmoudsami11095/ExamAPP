@@ -5,7 +5,34 @@
   "projects": {
     "ExamAPP": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "css",
+          "skipTests": false,
+          "type": "component"
+        },
+        "@schematics/angular:class": {
+          "suffix": "service"
+        },
+        "@schematics/angular:service": {
+          "type": "service"
+        },
+        "@schematics/angular:directive": {
+          "type": "directive"
+        },
+        "@schematics/angular:pipe": {
+          "type": "pipe"
+        },
+        "@schematics/angular:guard": {
+          "implements": ["CanActivate"]
+        },
+        "@schematics/angular:interceptor": {
+          "type": "interceptor"
+        },
+        "@schematics/angular:resolver": {
+          "type": "resolver"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -83,6 +110,36 @@
             ],
             "styles": [
               "src/styles.css"
+            ]
+          }
+        }
+      }
+    },
+    "auth": {
+      "projectType": "library",
+      "root": "projects/auth",
+      "sourceRoot": "projects/auth/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/auth/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/auth/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/auth/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
             ]
           }
         }
