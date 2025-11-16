@@ -1,0 +1,118 @@
+<div class="min-h-screen flex">
+    <!-- Left Section - Promotional Content -->
+    <div class="w-1/2 lg:w-1/2">
+      <app-auth-promo></app-auth-promo>
+    </div>
+  
+    <!-- Right Section - OTP Verification Form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-12">
+      <div class="w-full max-w-md space-y-8">
+        <!-- Back Arrow -->
+        <button
+          type="button"
+          (click)="goBack()"
+          class="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <i class="fas fa-arrow-left text-xl"></i>
+        </button>
+  
+        <!-- Title -->
+        <h1 class="text-3xl font-bold text-gray-900">Verify OTP</h1>
+  
+        <!-- Instructions -->
+        <div class="text-gray-600">
+          <p>
+            Please enter the 6-digits code we have sent to:
+            <span class="font-medium text-gray-900">{{ email }}</span>.
+            <button
+              type="button"
+              (click)="editEmail()"
+              class="text-blue-600 hover:text-blue-700 font-medium transition-colors"
+            >
+              Edit
+            </button>
+          </p>
+        </div>
+  
+        <!-- OTP Form -->
+        <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Error Message -->
+          @if (errorMessage) {
+          <div class="relative bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <div class="absolute top-2 right-2">
+              <i class="fas fa-times-circle text-red-600 text-lg"></i>
+            </div>
+            <p class="text-red-700 text-sm pr-6">{{ errorMessage }}</p>
+          </div>
+          }
+  
+          <!-- OTP Input Fields -->
+          <div class="flex justify-between gap-3">
+            @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+              <input
+                [id]="'otp' + i"
+                type="text"
+                [formControlName]="'otp' + i"
+                maxlength="1"
+                (input)="onInput($event, i - 1)"
+                (keydown)="onKeyDown($event, i)"
+                (paste)="onPaste($event)"
+                [class.border-red-500]="otpForm.get('otp' + i)?.invalid && otpForm.get('otp' + i)?.touched"
+                class="w-14 h-14 text-center text-2xl font-semibold border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+              />
+            }
+          </div>
+  
+          <!-- Resend Code Timer -->
+          <div class="text-center">
+            <p class="text-sm text-gray-500">
+              @if (!canResend) {
+                <span>You can request another code in: <span class="font-medium">{{ timer }}s</span></span>
+              }
+              @if (canResend) {
+                <span>
+                  Didn't receive the code?
+                  <button
+                    type="button"
+                    (click)="resendCode()"
+                    class="text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                  >
+                    Resend
+                  </button>
+                </span>
+              }
+            </p>
+          </div>
+  
+          <!-- Verify Button -->
+          <button
+            type="submit"
+            [disabled]="isLoading || otpForm.invalid"
+            class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            @if (!isLoading) {
+              <span>Verify Code</span>
+            }
+            @if (isLoading) {
+              <span class="flex items-center">
+                <i class="fas fa-spinner fa-spin mr-3 text-white"></i>
+                Verifying...
+              </span>
+            }
+          </button>
+        </form>
+  
+        <!-- Create Account Link -->
+        <div class="text-center">
+          <p class="text-sm text-gray-600">
+            Don't have an account?
+            <a [routerLink]="['/auth/register']" class="font-medium text-blue-600 hover:text-blue-700 transition-colors">
+              Create yours
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

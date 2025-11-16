@@ -29,5 +29,29 @@ export class AuthService implements AuthAPI {
         catchError(err => of(err))
       );
   }
+
+  forgotPassword(data: any): Observable<any> {
+    return this._httpClient.post(AuthEndPoint.FORGOTPASSWORD, data)
+      .pipe(
+        map((response: any) => this._authAPIAdaptorService.adapt(response)),
+        catchError(err => of(err))
+      );
+  }
+
+  verifyResetCode(data: any): Observable<any> {
+    return this._httpClient.post(AuthEndPoint.VERIFYRESETCODE, data)
+      .pipe(
+        map((response: any) => this._authAPIAdaptorService.adapt(response)),
+        catchError(err => of(err))
+      );
+  }
+
+  resetPassword(data: any): Observable<any> {
+    return this._httpClient.put(AuthEndPoint.RESETPASSWORD, data)
+      .pipe(
+        map((response: any) => this._authAPIAdaptorService.adapt(response)),
+        catchError(err => of(err))
+      );
+  }
   
 }

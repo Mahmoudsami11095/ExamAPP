@@ -11,7 +11,9 @@ export class AuthAPIAdaptorService implements Adaptor {
     return {
       message: data.message,
       token: data.token,
-      email: data.email
+      email: data.email,
+      info: data.info,
+      status: data.status
     }
   }
 }
