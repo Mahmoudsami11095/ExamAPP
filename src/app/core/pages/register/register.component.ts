@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'auth';
-import { AuthPromo } from '../../../shared/components/UI/auth-promo/auth-promo';
+import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 
 @Component({
   selector: 'app-register',

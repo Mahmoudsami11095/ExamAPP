@@ -21,3 +21,4 @@ describe('AuthPromo', () => {
     expect(component).toBeTruthy();
   });
 });
+
