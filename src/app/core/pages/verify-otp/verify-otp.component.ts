@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, ElementRef, QueryList, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
@@ -11,7 +11,7 @@ import { AuthService } from 'auth';
   templateUrl: './verify-otp.component.html',
   styleUrl: './verify-otp.component.css'
 })
-export class VerifyOtpComponent implements OnInit, OnDestroy {
+export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -25,6 +25,8 @@ export class VerifyOtpComponent implements OnInit, OnDestroy {
   timerInterval: any;
   canResend = false;
 
+  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef<HTMLInputElement>>;
+
   constructor() {
     // Create form with 6 OTP fields dynamically
     const otpControls: { [key: string]: any } = {};
@@ -32,6 +34,11 @@ export class VerifyOtpComponent implements OnInit, OnDestroy {
       otpControls[`otp${i}`] = ['', [Validators.required, Validators.pattern(/^[0-9]$/)]];
     }
     this.otpForm = this.fb.group(otpControls);
+  }
+
+  ngAfterViewInit(): void {
+    // Optionally focus the first OTP input when the view is initialized
+    this.focusInput(0);
   }
 
   ngOnInit() {
@@ -72,6 +79,11 @@ export class VerifyOtpComponent implements OnInit, OnDestroy {
     return values.join('');
   }
 
+  private focusInput(index: number): void {
+    const inputRef = this.otpInputs?.get(index);
+    inputRef?.nativeElement.focus();
+  }
+
   onInput(event: any, currentIndex: number) {
     const input = event.target;
     const value = input.value;
@@ -84,10 +96,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy {
 
     // Move to next input if value is entered
     if (value && currentIndex < 5) {
-      const nextInput = document.getElementById(`otp${currentIndex + 2}`);
-      if (nextInput) {
-        nextInput.focus();
-      }
+      this.focusInput(currentIndex + 1);
     }
   }
 
@@ -95,10 +104,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy {
     // Handle backspace
     const target = event.target as HTMLInputElement;
     if (event.key === 'Backspace' && target && !target.value && currentIndex > 0) {
-      const prevInput = document.getElementById(`otp${currentIndex}`);
-      if (prevInput) {
-        prevInput.focus();
-      }
+      this.focusInput(currentIndex - 1);
     }
   }
 
@@ -114,10 +120,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy {
         }
       });
       // Focus last input
-      const lastInput = document.getElementById('otp6');
-      if (lastInput) {
-        lastInput.focus();
-      }
+      this.focusInput(this.otpInputs.length - 1);
     }
   }
 
