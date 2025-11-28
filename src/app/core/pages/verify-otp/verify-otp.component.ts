@@ -4,6 +4,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-verify-otp',
@@ -17,10 +18,10 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
+  private toastr = inject(ToastrService);
 
   otpForm: FormGroup;
   isLoading = false;
-  errorMessage = '';
   email = 'user@example.com';
   timer = 60;
   timerInterval: any;
@@ -122,7 +123,6 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   resendCode() {
     if (this.canResend) {
       this.isLoading = true;
-      this.errorMessage = '';
       
       // Resend OTP by calling forgot password API again
       this.authService.forgotPassword({ email: this.email }).subscribe({
@@ -132,13 +132,16 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
           if (response && response.message === 'success') {
             // Restart timer
             this.startTimer();
-            this.errorMessage = '';
+            this.toastr.success('OTP resent successfully', 'Success');
           } else {
-            this.errorMessage = response?.message || response?.info || 'Failed to resend OTP. Please try again.';
+            const errorMsg = response?.message || response?.info || 'Failed to resend OTP. Please try again.';
+            this.toastr.error(errorMsg, 'Error');
           }
         },
         error: (error: any) => {
-          this.isLoading = false;  
+          this.isLoading = false;
+          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          this.toastr.error(errorMsg, 'Error');
           console.error('Resend OTP error:', error);
         }
       });
@@ -153,7 +156,6 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   onSubmit() {
     if (this.otpForm.valid) {
       this.isLoading = true;
-      this.errorMessage = '';
 
       const otpCode = this.getOtpValue();
 
@@ -164,6 +166,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
           
           // Check if response indicates success (API returns { "status": "Success" })
           if (response && (response.status === 'Success' || response.message === 'success')) {
+            this.toastr.success('OTP verified successfully', 'Success');
             // Navigate to reset password page
             this.router.navigate(['/auth/create-password'], { queryParams: { email: this.email } });
             return;
@@ -171,20 +174,24 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
           
           // Check if response is an HTTP error (when catchError returns error as value)
           if (response && typeof response.status === 'number' && response.status !== 200) {
-            this.errorMessage = response.error?.message || response.message || 'Invalid OTP code. Please try again.';
+            const errorMsg = response.error?.message || response.message || 'Invalid OTP code. Please try again.';
+            this.toastr.error(errorMsg, 'Error');
             this.otpForm.reset();
             console.log('Verify OTP Failed:', response);
             return;
           }
           
           // Response without success message or error status
-          this.errorMessage = response?.message || response?.status || 'Invalid OTP code. Please try again.';
+          const errorMsg = response?.message || response?.status || 'Invalid OTP code. Please try again.';
+          this.toastr.error(errorMsg, 'Error');
           // Clear form
           this.otpForm.reset();
           console.log('Verify OTP Failed:', response);
         },
         error: (error: any) => {
-          this.isLoading = false;    
+          this.isLoading = false;
+          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          this.toastr.error(errorMsg, 'Error');
           // Clear form on error
           this.otpForm.reset();
           console.error('Verify OTP error:', error);

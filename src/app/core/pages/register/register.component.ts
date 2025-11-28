@@ -5,6 +5,7 @@ import { AuthService } from 'auth';
 import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -17,6 +18,7 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toastr = inject(ToastrService);
 
   registerForm: FormGroup = this.fb.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -31,8 +33,6 @@ export class RegisterComponent {
   });
 
   isLoading = false;
-  errorMessage = '';
-  successMessage = '';
   showPassword = false;
   showConfirmPassword = false;
 
@@ -79,8 +79,6 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       this.isLoading = true;
-      this.errorMessage = '';
-      this.successMessage = '';
 
       const { firstName, lastName, username, email, phone, password, confirmPassword } = this.registerForm.value;
 
@@ -100,8 +98,8 @@ export class RegisterComponent {
           
           // Check if response has a token (successful registration)
           if (response && response.token) {
-            this.successMessage = response.message || 'Registration successful! Redirecting to login...';
-            this.errorMessage = '';
+            const successMsg = response.message || 'Registration successful! Redirecting to login...';
+            this.toastr.success(successMsg, 'Success');
             // TODO: Store token if needed
             console.log('Registration successful:', response);
             
@@ -111,15 +109,15 @@ export class RegisterComponent {
             }, 2000);
           } else {
             // Response without token (error from server)
-            this.errorMessage = response?.message || 'Registration failed. Please try again.';
-            this.successMessage = '';
+            const errorMsg = response?.message || 'Registration failed. Please try again.';
+            this.toastr.error(errorMsg, 'Error');
             console.log('Registration Failed:', response);
           }
         },
         error: (error: any) => {
           this.isLoading = false;
-          this.errorMessage = error.formattedMessage || 'An error occurred. Please try again.';
-          this.successMessage = '';
+          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          this.toastr.error(errorMsg, 'Error');
           console.error('Registration error:', error);
         }
       });

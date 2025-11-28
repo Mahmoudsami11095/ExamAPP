@@ -5,6 +5,7 @@ import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-pro
 import { AuthService } from 'auth';
 import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-password',
@@ -18,11 +19,10 @@ export class CreatePasswordComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
+  private toastr = inject(ToastrService);
 
   resetPasswordForm: FormGroup;
   isLoading = false;
-  errorMessage = '';
-  successMessage = '';
   showNewPassword = false;
   showConfirmPassword = false;
   email = '';
@@ -62,8 +62,6 @@ export class CreatePasswordComponent {
   onSubmit() {
     if (this.resetPasswordForm.valid) {
       this.isLoading = true;
-      this.errorMessage = '';
-      this.successMessage = '';
 
       const { newPassword } = this.resetPasswordForm.value;
 
@@ -74,31 +72,31 @@ export class CreatePasswordComponent {
           
           // Check if response is an HTTP error (when catchError returns error as value)
           if (response && typeof response.status === 'number' && response.status !== 200) {
-            this.errorMessage = response.error?.message || response.message || 'Failed to reset password. Please try again.';
-            this.successMessage = '';
+            const errorMsg = response.error?.message || response.message || 'Failed to reset password. Please try again.';
+            this.toastr.error(errorMsg, 'Error');
             console.log('Reset Password Failed:', response);
             return;
           }
           
           // Check if response indicates success
           if (response && (response.status === 'Success' || response.message === 'success')) {
-            this.successMessage = response.message || 'Password reset successfully!';
-            this.errorMessage = '';
+            const successMsg = response.message || 'Password reset successfully!';
+            this.toastr.success(successMsg, 'Success');
             
             // Navigate to login after 2 seconds
             setTimeout(() => {
               this.router.navigate(['/auth/login'], { queryParams: { passwordReset: 'true' } });
             }, 2000);
           } else {
-            this.errorMessage = response?.message || 'Failed to reset password. Please try again.';
-            this.successMessage = '';
+            const errorMsg = response?.message || 'Failed to reset password. Please try again.';
+            this.toastr.error(errorMsg, 'Error');
             console.log('Reset Password Failed:', response);
           }
         },
         error: (error: any) => {
           this.isLoading = false;
-          this.errorMessage = error.formattedMessage || 'An error occurred. Please try again.';
-          this.successMessage = '';
+          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          this.toastr.error(errorMsg, 'Error');
           console.error('Reset Password error:', error);
         }
       });

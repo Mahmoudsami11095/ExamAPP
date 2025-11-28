@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-forgot-password',
@@ -16,12 +17,11 @@ export class ForgotPasswordComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private toastr = inject(ToastrService);
 
   forgotPasswordForm: FormGroup;
   isLoading = false;
   isEmailSent = false;
-  errorMessage = '';
-  successMessage = '';
 
   constructor() {
     this.forgotPasswordForm = this.fb.group({
@@ -36,8 +36,6 @@ export class ForgotPasswordComponent {
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
       this.isLoading = true;
-      this.errorMessage = '';
-      this.successMessage = '';
 
       const { email } = this.forgotPasswordForm.value;
 
@@ -49,8 +47,8 @@ export class ForgotPasswordComponent {
           if (response && response.status && response.status !== 200) {
             // This is an error response
             this.isEmailSent = false;
-            this.successMessage = '';
-            this.errorMessage = response.error?.message || response.message ;
+            const errorMsg = response.error?.message || response.message;
+            this.toastr.error(errorMsg, 'Error');
             console.log('Forgot Password Failed:', response);
             return;
           }
@@ -58,15 +56,15 @@ export class ForgotPasswordComponent {
           // Check if response indicates success
           if (response && response.message === 'success') {
             this.isEmailSent = true;
-            this.successMessage = response.info || 'OTP sent to your email';
-            this.errorMessage = '';
+            const successMsg = response.info || 'OTP sent to your email';
+            this.toastr.success(successMsg, 'Success');
             console.log('OTP sent to your email', response);
             // Automatically navigate to verify OTP page
             this.navigateToVerifyOtp();
           } else {
             // Response without success message (might be an error message)
-            this.errorMessage = response?.message || response?.info || 'Failed to send OTP. Please try again.';
-            this.successMessage = '';
+            const errorMsg = response?.message || response?.info || 'Failed to send OTP. Please try again.';
+            this.toastr.error(errorMsg, 'Error');
             this.isEmailSent = false;
             console.log('Forgot Password Failed:', response);
           }
@@ -74,8 +72,8 @@ export class ForgotPasswordComponent {
         error: (error: any) => {
           this.isLoading = false;
           this.isEmailSent = false;
-          this.errorMessage = error.formattedMessage || 'An error occurred. Please try again.';
-          this.successMessage = '';
+          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          this.toastr.error(errorMsg, 'Error');
           console.error('Forgot Password error:', error);
         }
       });
