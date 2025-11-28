@@ -68,22 +68,9 @@ export class Login implements OnInit {
 
           }
         },
-        error: (error) => {
+        error: (error: any) => {
           this.isLoading = false;
-          
-          // Handle HTTP errors
-          if (error.status === 401) {
-            this.errorMessage = error.error?.message || 'Invalid email or password. Please check your credentials and try again.';
-          } else if (error.status === 400) {
-            this.errorMessage = error.error?.message || 'Invalid request. Please check your input and try again.';
-          } else if (error.status === 500) {
-            this.errorMessage = 'Server error. Please try again later.';
-          } else if (error.status === 0 || !error.status) {
-            this.errorMessage = 'Network error. Please check your internet connection and try again.';
-          } else {
-            this.errorMessage = error.error?.message || error.message || 'An error occurred. Please try again.';
-          }
-          
+          this.errorMessage = error.formattedMessage || 'An error occurred. Please try again.';
           this.successMessage = '';
           console.error('Login error:', error);
         }

@@ -74,8 +74,7 @@ export class ForgotPasswordComponent {
         error: (error: any) => {
           this.isLoading = false;
           this.isEmailSent = false;
-          
-          
+          this.errorMessage = error.formattedMessage || 'An error occurred. Please try again.';
           this.successMessage = '';
           console.error('Forgot Password error:', error);
         }

@@ -97,6 +97,7 @@ export class CreatePasswordComponent {
         },
         error: (error: any) => {
           this.isLoading = false;
+          this.errorMessage = error.formattedMessage || 'An error occurred. Please try again.';
           this.successMessage = '';
           console.error('Reset Password error:', error);
         }
