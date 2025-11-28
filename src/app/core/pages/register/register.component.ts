@@ -1,12 +1,13 @@
 import { Component, inject, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from 'auth';
+import { AuthService, RegisterRequest, LoginResponse } from 'auth';
 import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -84,7 +85,7 @@ export class RegisterComponent implements OnDestroy {
 
       const { firstName, lastName, username, email, phone, password, confirmPassword } = this.registerForm.value;
 
-      const registerData = {
+      const registerData: RegisterRequest = {
         username,
         firstName,
         lastName,
@@ -95,16 +96,16 @@ export class RegisterComponent implements OnDestroy {
       };
 
       this.authService.register(registerData).pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response) => {
+        next: (response: LoginResponse) => {
           this.isLoading = false;
-          
+
           // Check if response has a token (successful registration)
           if (response && response.token) {
             const successMsg = response.message || 'Registration successful! Redirecting to login...';
             this.toastr.success(successMsg, 'Success');
             // TODO: Store token if needed
             console.log('Registration successful:', response);
-            
+
             // Redirect to login after 2 seconds
             setTimeout(() => {
               this.router.navigate(['/auth/login'], { queryParams: { registered: 'true' } });
@@ -116,9 +117,9 @@ export class RegisterComponent implements OnDestroy {
             console.log('Registration Failed:', response);
           }
         },
-        error: (error: any) => {
+        error: (error: HttpErrorResponse) => {
           this.isLoading = false;
-          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          const errorMsg = error.message || 'An error occurred. Please try again.';
           this.toastr.error(errorMsg, 'Error');
           console.error('Registration error:', error);
         }
@@ -133,4 +134,3 @@ export class RegisterComponent implements OnDestroy {
     this.destroy$.complete();
   }
 }
-

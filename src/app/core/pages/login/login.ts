@@ -2,10 +2,11 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
-import { AuthService } from 'auth';
+import { AuthService, LoginRequest, LoginResponse } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -50,15 +51,16 @@ export class Login implements OnInit, OnDestroy {
     return this.loginForm.get('password');
   }
 
-  
   login(): void {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      
-      this._authService.login(this.loginForm.value).pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response) => {
+
+      const loginData: LoginRequest = this.loginForm.value as LoginRequest;
+
+      this._authService.login(loginData).pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response: LoginResponse) => {
           this.isLoading = false;
-          
+
           // Check if response has a token (successful login)
           if (response && response.token) {
             const successMsg = (response.message.toUpperCase() + response.message) || 'Login successful!';
@@ -73,9 +75,9 @@ export class Login implements OnInit, OnDestroy {
 
           }
         },
-        error: (error: any) => {
+        error: (error: HttpErrorResponse) => {
           this.isLoading = false;
-          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          const errorMsg = error.message || 'An error occurred. Please try again.';
           this.toastr.error(errorMsg, 'Error');
           console.error('Login error:', error);
         }

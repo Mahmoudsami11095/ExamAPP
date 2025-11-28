@@ -5,10 +5,10 @@ import { StatusResponse } from '../interfaces/auth-responses';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthStatusAdaptorService implements Adaptor<any, StatusResponse> {
+export class AuthStatusAdaptorService implements Adaptor<StatusResponse, StatusResponse> {
   constructor() { }
 
-  adapt(data: any): StatusResponse {
+  adapt(data: StatusResponse): StatusResponse {
     return {
       message: data.message,
       status: data.status

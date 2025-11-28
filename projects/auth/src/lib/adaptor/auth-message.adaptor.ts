@@ -5,10 +5,10 @@ import { MessageResponse } from '../interfaces/auth-responses';
 @Injectable({
     providedIn: 'root',
 })
-export class AuthMessageAdaptorService implements Adaptor<any, MessageResponse> {
+export class AuthMessageAdaptorService implements Adaptor<MessageResponse, MessageResponse> {
     constructor() { }
 
-    adapt(data: any): MessageResponse {
+    adapt(data: MessageResponse): MessageResponse {
         return {
             message: data.message
         }
