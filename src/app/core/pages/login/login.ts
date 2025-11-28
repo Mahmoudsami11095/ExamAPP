@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 
@@ -10,8 +10,9 @@ import { AuthService } from 'auth';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnInit {
   private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -23,6 +24,15 @@ export class Login {
   errorMessage = '';
   successMessage = '';
   showPassword = false;
+
+  ngOnInit() {
+    // Check if user was redirected after password reset
+    this.route.queryParams.subscribe(params => {
+      if (params['passwordReset'] === 'true') {
+        this.successMessage = 'Password reset successfully! Please login with your new password.';
+      }
+    });
+  }
 
   get email(): AbstractControl | null {
     return this.loginForm.get('email');
