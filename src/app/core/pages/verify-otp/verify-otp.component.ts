@@ -31,7 +31,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     // Create form with 6 OTP fields dynamically
     const otpControls: { [key: string]: any } = {};
     for (let i = 1; i <= 6; i++) {
-      otpControls[`otp${i}`] = ['', [Validators.required, Validators.pattern(/^[0-9]$/)]];
+      otpControls[`otp${i}`] = ['', [Validators.required, Validators.maxLength(1), Validators.pattern(/^[0-9]$/)]];
     }
     this.otpForm = this.fb.group(otpControls);
   }
@@ -87,12 +87,6 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   onInput(event: any, currentIndex: number) {
     const input = event.target;
     const value = input.value;
-
-    // Only allow single digit
-    if (value.length > 1) {
-      input.value = value.charAt(0);
-      this.otpForm.get(`otp${currentIndex + 1}`)?.setValue(value.charAt(0));
-    }
 
     // Move to next input if value is entered
     if (value && currentIndex < 5) {
