@@ -4,11 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'auth';
 import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
+import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthPromo],
+  imports: [ReactiveFormsModule, RouterLink, AuthPromo, SubmitButtonComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

@@ -3,11 +3,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
+import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 
 @Component({
   selector: 'app-verify-otp',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthPromo],
+  imports: [ReactiveFormsModule, RouterLink, AuthPromo, SubmitButtonComponent],
   templateUrl: './verify-otp.component.html',
   styleUrl: './verify-otp.component.css'
 })

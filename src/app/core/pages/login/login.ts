@@ -3,10 +3,11 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractContro
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
+import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 
 @Component({
   selector: 'app-login',
-  imports: [AuthPromo, ReactiveFormsModule, RouterLink],
+  imports: [AuthPromo, ReactiveFormsModule, RouterLink, SubmitButtonComponent],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
