@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractContro
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
+import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 
 @Component({
   selector: 'app-create-password',
@@ -30,7 +31,7 @@ export class CreatePasswordComponent {
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]]
     }, {
-      validators: this.passwordMatchValidator
+      validators: passwordMatchValidator('newPassword', 'confirmPassword')
     });
 
     // Get email from query params
@@ -39,16 +40,6 @@ export class CreatePasswordComponent {
         this.email = params['email'];
       }
     });
-  }
-
-  passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    const newPassword = control.get('newPassword');
-    const confirmPassword = control.get('confirmPassword');
-    
-    if (newPassword && confirmPassword && newPassword.value !== confirmPassword.value) {
-      return { passwordMismatch: true };
-    }
-    return null;
   }
 
   get newPassword(): AbstractControl | null {

@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'auth';
+import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 
 @Component({
@@ -25,7 +26,7 @@ export class RegisterComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required]]
   }, {
-    validators: this.passwordMatchValidator
+    validators: passwordMatchValidator('password', 'confirmPassword')
   });
 
   isLoading = false;
@@ -37,16 +38,6 @@ export class RegisterComponent {
   selectedCountryCode = 'EG';
   countryCode = '+20';
   phoneNumber = '';
-
-  passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    const password = control.get('password');
-    const confirmPassword = control.get('confirmPassword');
-    
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      return { passwordMismatch: true };
-    }
-    return null;
-  }
 
   get firstName() {
     return this.registerForm.get('firstName');
