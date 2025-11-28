@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 import { Login } from './core/pages/login/login';
 import { RegisterComponent } from './core/pages/register/register.component';
 import { ForgotPasswordComponent } from './core/pages/forgot-password/forgot-password.component';
-import { VerifyOtpComponent } from './core/pages/verify-otp/verify-otp.component';
-import { CreatePasswordComponent } from './core/pages/create-password/create-password.component';
 
 export const routes: Routes = [
     {
@@ -22,17 +20,9 @@ export const routes: Routes = [
         path: 'auth/forgot-password',
         component: ForgotPasswordComponent
     },
-    { 
-        path: 'auth/verify-otp',
-        component: VerifyOtpComponent
-    },
-    { 
-        path: 'auth/create-password',
-        component: CreatePasswordComponent
-    },
-    { 
-        path: '**', 
-        redirectTo: '/auth/login' 
+    {
+        path: '**',
+        redirectTo: '/auth/login'
     }
 
 ];

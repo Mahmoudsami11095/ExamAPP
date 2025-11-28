@@ -1,6 +1,6 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, Input } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
@@ -18,16 +18,16 @@ import { Subject, takeUntil } from 'rxjs';
 export class CreatePasswordComponent implements OnDestroy {
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
   private destroy$ = new Subject<void>();
+
+  @Input() email: string = '';
 
   resetPasswordForm: FormGroup;
   isLoading = false;
   showNewPassword = false;
   showConfirmPassword = false;
-  email = '';
 
   constructor() {
     this.resetPasswordForm = this.fb.group({
@@ -35,13 +35,6 @@ export class CreatePasswordComponent implements OnDestroy {
       confirmPassword: ['', [Validators.required]]
     }, {
       validators: passwordMatchValidator('newPassword', 'confirmPassword')
-    });
-
-    // Get email from query params
-    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      if (params['email']) {
-        this.email = params['email'];
-      }
     });
   }
 
@@ -71,7 +64,7 @@ export class CreatePasswordComponent implements OnDestroy {
       this.authService.resetPassword({ email: this.email, newPassword }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          
+
           // Check if response is an HTTP error (when catchError returns error as value)
           if (response && typeof response.status === 'number' && response.status !== 200) {
             const errorMsg = response.error?.message || response.message || 'Failed to reset password. Please try again.';
@@ -79,12 +72,12 @@ export class CreatePasswordComponent implements OnDestroy {
             console.log('Reset Password Failed:', response);
             return;
           }
-          
+
           // Check if response indicates success
           if (response && (response.status === 'Success' || response.message === 'success')) {
             const successMsg = response.message || 'Password reset successfully!';
             this.toastr.success(successMsg, 'Success');
-            
+
             // Navigate to login after 2 seconds
             setTimeout(() => {
               this.router.navigate(['/auth/login'], { queryParams: { passwordReset: 'true' } });
@@ -97,7 +90,7 @@ export class CreatePasswordComponent implements OnDestroy {
         },
         error: (error: any) => {
           this.isLoading = false;
-          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          const errorMsg = error.error?.message || error.message || 'An error occurred. Please try again.';
           this.toastr.error(errorMsg, 'Error');
           console.error('Reset Password error:', error);
         }

@@ -77,7 +77,7 @@ export class Login implements OnInit, OnDestroy {
         },
         error: (error: HttpErrorResponse) => {
           this.isLoading = false;
-          const errorMsg = error.message || 'An error occurred. Please try again.';
+          const errorMsg = error.error?.message || error.message || 'An error occurred. Please try again.';
           this.toastr.error(errorMsg, 'Error');
           console.error('Login error:', error);
         }

@@ -6,11 +6,13 @@ import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
+import { VerifyOtpComponent } from '../verify-otp/verify-otp.component';
+import { CreatePasswordComponent } from '../create-password/create-password.component';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthPromo, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, AuthPromo, SubmitButtonComponent, VerifyOtpComponent, CreatePasswordComponent],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css'
 })
@@ -23,7 +25,8 @@ export class ForgotPasswordComponent implements OnDestroy {
 
   forgotPasswordForm: FormGroup;
   isLoading = false;
-  isEmailSent = false;
+  step = 1;
+  emailValue = '';
 
   constructor() {
     this.forgotPasswordForm = this.fb.group({
@@ -40,41 +43,38 @@ export class ForgotPasswordComponent implements OnDestroy {
       this.isLoading = true;
 
       const { email } = this.forgotPasswordForm.value;
+      this.emailValue = email;
 
       this.authService.forgotPassword({ email }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          
+
           // Check if response is an error 
           if (response && response.status && response.status !== 200) {
             // This is an error response
-            this.isEmailSent = false;
             const errorMsg = response.error?.message || response.message;
             this.toastr.error(errorMsg, 'Error');
             console.log('Forgot Password Failed:', response);
             return;
           }
-          
+
           // Check if response indicates success
           if (response && response.message === 'success') {
-            this.isEmailSent = true;
             const successMsg = response.info || 'OTP sent to your email';
             this.toastr.success(successMsg, 'Success');
             console.log('OTP sent to your email', response);
-            // Automatically navigate to verify OTP page
-            this.navigateToVerifyOtp();
+            // Advance to next step
+            this.step = 2;
           } else {
             // Response without success message (might be an error message)
             const errorMsg = response?.message || response?.info || 'Failed to send OTP. Please try again.';
             this.toastr.error(errorMsg, 'Error');
-            this.isEmailSent = false;
             console.log('Forgot Password Failed:', response);
           }
         },
         error: (error: any) => {
           this.isLoading = false;
-          this.isEmailSent = false;
-          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          const errorMsg = error.error?.message || error.message || 'An error occurred. Please try again.';
           this.toastr.error(errorMsg, 'Error');
           console.error('Forgot Password error:', error);
         }
@@ -84,12 +84,12 @@ export class ForgotPasswordComponent implements OnDestroy {
     }
   }
 
+  onOtpVerified() {
+    this.step = 3;
+  }
 
-  navigateToVerifyOtp() {
-    const email = this.forgotPasswordForm.get('email')?.value;
-    if (email) {
-      this.router.navigate(['/auth/verify-otp'], { queryParams: { email } });
-    }
+  onBack() {
+    this.step = 1;
   }
 
   ngOnDestroy() {

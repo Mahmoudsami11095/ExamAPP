@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, ElementRef, QueryList, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, ElementRef, QueryList, inject, Input, Output, EventEmitter } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
@@ -17,14 +17,16 @@ import { Subject, takeUntil } from 'rxjs';
 export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
   private destroy$ = new Subject<void>();
 
+  @Input() email: string = '';
+  @Output() verified = new EventEmitter<void>();
+  @Output() back = new EventEmitter<void>();
+
   otpForm: FormGroup;
   isLoading = false;
-  email = 'user@example.com';
   timer = 60;
   timerInterval: any;
   canResend = false;
@@ -46,13 +48,6 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    // Get email from query params if available
-    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      if (params['email']) {
-        this.email = params['email'];
-      }
-    });
-
     // Start timer
     this.startTimer();
   }
@@ -111,7 +106,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   onPaste(event: ClipboardEvent) {
     event.preventDefault();
     const pastedData = event.clipboardData?.getData('text').trim();
-    
+
     if (pastedData && /^\d{6}$/.test(pastedData)) {
       const digits = pastedData.split('');
       digits.forEach((digit, index) => {
@@ -127,12 +122,12 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   resendCode() {
     if (this.canResend) {
       this.isLoading = true;
-      
+
       // Resend OTP by calling forgot password API again
       this.authService.forgotPassword({ email: this.email }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          
+
           if (response && response.message === 'success') {
             // Restart timer
             this.startTimer();
@@ -153,8 +148,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   editEmail() {
-    // Navigate back to forgot password page
-    this.router.navigate(['/auth/forgot-password'], { queryParams: { email: this.email } });
+    this.back.emit();
   }
 
   onSubmit() {
@@ -167,15 +161,14 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
       this.authService.verifyResetCode({ resetCode: otpCode }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
-          
+
           // Check if response indicates success (API returns { "status": "Success" })
           if (response && (response.status === 'Success' || response.message === 'success')) {
             this.toastr.success('OTP verified successfully', 'Success');
-            // Navigate to reset password page
-            this.router.navigate(['/auth/create-password'], { queryParams: { email: this.email } });
+            this.verified.emit();
             return;
           }
-          
+
           // Check if response is an HTTP error (when catchError returns error as value)
           if (response && typeof response.status === 'number' && response.status !== 200) {
             const errorMsg = response.error?.message || response.message || 'Invalid OTP code. Please try again.';
@@ -184,7 +177,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
             console.log('Verify OTP Failed:', response);
             return;
           }
-          
+
           // Response without success message or error status
           const errorMsg = response?.message || response?.status || 'Invalid OTP code. Please try again.';
           this.toastr.error(errorMsg, 'Error');
@@ -194,7 +187,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
         },
         error: (error: any) => {
           this.isLoading = false;
-          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
+          const errorMsg = error.error?.message || error.message || 'An error occurred. Please try again.';
           this.toastr.error(errorMsg, 'Error');
           // Clear form on error
           this.otpForm.reset();
@@ -207,7 +200,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   goBack() {
-    this.router.navigate(['/auth/forgot-password']);
+    this.back.emit();
   }
 }
 
