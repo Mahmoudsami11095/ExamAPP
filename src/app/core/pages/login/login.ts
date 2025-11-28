@@ -1,10 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +13,11 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login implements OnInit {
+export class Login implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private toastr = inject(ToastrService);
+  private destroy$ = new Subject<void>();
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -28,11 +30,16 @@ export class Login implements OnInit {
 
   ngOnInit() {
     // Check if user was redirected after password reset
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       if (params['passwordReset'] === 'true') {
         this.toastr.success('Password reset successfully! Please login with your new password.', 'Success');
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   get email(): AbstractControl | null {
@@ -48,7 +55,7 @@ export class Login implements OnInit {
     if (this.loginForm.valid) {
       this.isLoading = true;
       
-      this._authService.login(this.loginForm.value).subscribe({
+      this._authService.login(this.loginForm.value).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response) => {
           this.isLoading = false;
           

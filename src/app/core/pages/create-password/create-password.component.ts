@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
@@ -6,6 +6,7 @@ import { AuthService } from 'auth';
 import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-create-password',
@@ -14,12 +15,13 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './create-password.component.html',
   styleUrl: './create-password.component.css',
 })
-export class CreatePasswordComponent {
+export class CreatePasswordComponent implements OnDestroy {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
+  private destroy$ = new Subject<void>();
 
   resetPasswordForm: FormGroup;
   isLoading = false;
@@ -36,7 +38,7 @@ export class CreatePasswordComponent {
     });
 
     // Get email from query params
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       if (params['email']) {
         this.email = params['email'];
       }
@@ -66,7 +68,7 @@ export class CreatePasswordComponent {
       const { newPassword } = this.resetPasswordForm.value;
 
       // Call API to reset password
-      this.authService.resetPassword({ email: this.email, newPassword }).subscribe({
+      this.authService.resetPassword({ email: this.email, newPassword }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
           
@@ -103,6 +105,11 @@ export class CreatePasswordComponent {
     } else {
       this.resetPasswordForm.markAllAsTouched();
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

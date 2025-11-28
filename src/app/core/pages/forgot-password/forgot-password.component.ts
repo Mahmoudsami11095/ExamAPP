@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-forgot-password',
@@ -13,11 +14,12 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css'
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent implements OnDestroy {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
+  private destroy$ = new Subject<void>();
 
   forgotPasswordForm: FormGroup;
   isLoading = false;
@@ -39,7 +41,7 @@ export class ForgotPasswordComponent {
 
       const { email } = this.forgotPasswordForm.value;
 
-      this.authService.forgotPassword({ email }).subscribe({
+      this.authService.forgotPassword({ email }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
           
@@ -88,6 +90,11 @@ export class ForgotPasswordComponent {
     if (email) {
       this.router.navigate(['/auth/verify-otp'], { queryParams: { email } });
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'auth';
@@ -6,6 +6,7 @@ import { passwordMatchValidator } from '../../../shared/validators/password-matc
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -14,11 +15,12 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
+  private destroy$ = new Subject<void>();
 
   registerForm: FormGroup = this.fb.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -92,7 +94,7 @@ export class RegisterComponent {
         phone
       };
 
-      this.authService.register(registerData).subscribe({
+      this.authService.register(registerData).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response) => {
           this.isLoading = false;
           
@@ -124,6 +126,11 @@ export class RegisterComponent {
     } else {
       this.registerForm.markAllAsTouched();
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

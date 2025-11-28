@@ -5,6 +5,7 @@ import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-pro
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-verify-otp',
@@ -19,6 +20,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
+  private destroy$ = new Subject<void>();
 
   otpForm: FormGroup;
   isLoading = false;
@@ -45,7 +47,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     // Get email from query params if available
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       if (params['email']) {
         this.email = params['email'];
       }
@@ -56,6 +58,8 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
     }
@@ -125,7 +129,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isLoading = true;
       
       // Resend OTP by calling forgot password API again
-      this.authService.forgotPassword({ email: this.email }).subscribe({
+      this.authService.forgotPassword({ email: this.email }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
           
@@ -160,7 +164,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
       const otpCode = this.getOtpValue();
 
       // Verify OTP with backend
-      this.authService.verifyResetCode({ resetCode: otpCode }).subscribe({
+      this.authService.verifyResetCode({ resetCode: otpCode }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
           
