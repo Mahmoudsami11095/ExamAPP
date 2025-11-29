@@ -4,13 +4,14 @@ import { RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
+import { AuthLinkComponent } from '../../../shared/components/UI/auth-link/auth-link.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-verify-otp',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, SubmitButtonComponent, AuthLinkComponent],
   templateUrl: './verify-otp.component.html',
   styleUrl: './verify-otp.component.css'
 })

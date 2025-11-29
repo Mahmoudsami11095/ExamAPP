@@ -42,12 +42,5 @@
   </form>
 
   <!-- Create Account Link -->
-  <div class="text-center">
-    <p class="text-sm text-gray-600">
-      Don't have an account?
-      <a [routerLink]="['/auth/register']" class="font-medium text-blue-600 hover:text-blue-700 transition-colors">
-        Create yours
-      </a>
-    </p>
-  </div>
+  <app-auth-link text="Don't have an account?" linkText="Create yours" [linkRoute]="['/auth/register']"></app-auth-link>
 </div>

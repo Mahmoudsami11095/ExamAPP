@@ -4,12 +4,15 @@
     </label>
     <div class="relative">
         <input [id]="id()" [type]="type()" [formControl]="$any(control())"
-            [class.border-red-500]="control().invalid && control().touched"
+            [class.border-red-500]="(control().invalid && control().touched) || externalError()"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400"
             [placeholder]="placeholder()" />
     </div>
-    @if (control().invalid && control().touched) {
+    @if ((control().invalid && control().touched) || externalError()) {
     <div class="mt-1 text-sm text-red-600">
+        @if (externalError()) {
+        <span>{{ externalErrorMessage() }}</span>
+        }
         @if (control().errors?.['required']) {
         <span>{{ label() }} is required</span>
         }

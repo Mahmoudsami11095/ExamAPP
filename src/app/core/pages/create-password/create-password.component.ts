@@ -5,13 +5,15 @@ import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-pro
 import { AuthService } from 'auth';
 import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
+import { AuthInputComponent } from '../../../shared/components/UI/auth-input/auth-input.component';
+import { AuthLinkComponent } from '../../../shared/components/UI/auth-link/auth-link.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-create-password',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, SubmitButtonComponent, AuthInputComponent, AuthLinkComponent],
   templateUrl: './create-password.component.html',
   styleUrl: './create-password.component.css',
 })

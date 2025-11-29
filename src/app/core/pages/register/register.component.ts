@@ -6,6 +6,7 @@ import { passwordMatchValidator } from '../../../shared/validators/password-matc
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
 import { AuthInputComponent } from '../../../shared/components/UI/auth-input/auth-input.component';
+import { AuthLinkComponent } from '../../../shared/components/UI/auth-link/auth-link.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -13,7 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent, AuthInputComponent],
+  imports: [ReactiveFormsModule, SubmitButtonComponent, AuthInputComponent, AuthLinkComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

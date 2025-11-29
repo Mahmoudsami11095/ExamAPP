@@ -15,4 +15,6 @@ export class AuthInputComponent {
     type = input<string>('text');
     placeholder = input<string>('');
     id = input.required<string>();
+    externalError = input<boolean>(false);
+    externalErrorMessage = input<string>('');
 }
