@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, ElementRef, QueryList, inject, Output, EventEmitter, input } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
+import { AuthPromo } from '../auth-promo/auth-promo';
 import { AuthService } from 'auth';
-import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
-import { AuthLinkComponent } from '../../../shared/components/UI/auth-link/auth-link.component';
+import { SubmitButtonComponent } from '../../../../shared/components/UI/submit-button/submit-button.component';
+import { AuthLinkComponent } from '../../../../shared/components/UI/auth-link/auth-link.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 

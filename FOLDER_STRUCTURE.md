@@ -55,35 +55,40 @@ app/
 │   │   └── .gitkeep
 │   ├── layouts/              # Layout components
 │   │   └── .gitkeep
-│   ├── pages/                # Core pages (authentication pages)
-│   │   ├── login/            # Login page component
-│   │   │   ├── login.ts      # Login component logic
-│   │   │   ├── login.html    # Login component template
-│   │   │   ├── login.css     # Login component styles
-│   │   │   └── login.spec.ts # Login component tests
-│   │   ├── register/         # Register page component
-│   │   │   ├── register.component.ts      # Register component logic
-│   │   │   ├── register.component.html    # Register component template
-│   │   │   ├── register.component.css     # Register component styles
-│   │   │   └── register.component.spec.ts  # Register component tests
-│   │   ├── forgot-password/  # Forgot password page component
-│   │   │   ├── forgot-password.component.ts      # Component logic
-│   │   │   ├── forgot-password.component.html    # Component template
-│   │   │   ├── forgot-password.component.css     # Component styles
-│   │   │   └── forgot-password.component.spec.ts # Component tests
-│   │   ├── verify-otp/       # Verify OTP page component
-│   │   │   ├── verify-otp.component.ts      # Component logic
-│   │   │   ├── verify-otp.component.html    # Component template
-│   │   │   ├── verify-otp.component.css      # Component styles
-│   │   │   └── verify-otp.component.spec.ts  # Component tests
-│   │   └── create-password/  # Create/Reset password page component
-│   │       ├── create-password.component.ts      # Component logic
-│   │       ├── create-password.component.html    # Component template
-│   │       ├── create-password.component.css     # Component styles
-│   │       └── create-password.component.spec.ts # Component tests
 │   └── services/             # Core services (singleton services)
 │       └── .gitkeep
 ├── features/                 # Feature modules (domain-specific functionality)
+│   ├── auth/                 # Authentication feature
+│   │   ├── components/       # Auth components
+│   │   │   ├── login/            # Login page component
+│   │   │   │   ├── login.ts      # Login component logic
+│   │   │   │   ├── login.html    # Login component template
+│   │   │   │   ├── login.css     # Login component styles
+│   │   │   │   └── login.spec.ts # Login component tests
+│   │   │   ├── register/         # Register page component
+│   │   │   │   ├── register.component.ts      # Register component logic
+│   │   │   │   ├── register.component.html    # Register component template
+│   │   │   │   ├── register.component.css     # Register component styles
+│   │   │   │   └── register.component.spec.ts  # Register component tests
+│   │   │   ├── forgot-password/  # Forgot password page component
+│   │   │   │   ├── forgot-password.component.ts      # Component logic
+│   │   │   │   ├── forgot-password.component.html    # Component template
+│   │   │   │   ├── forgot-password.component.css     # Component styles
+│   │   │   │   └── forgot-password.component.spec.ts # Component tests
+│   │   │   ├── verify-otp/       # Verify OTP page component
+│   │   │   │   ├── verify-otp.component.ts      # Component logic
+│   │   │   │   ├── verify-otp.component.html    # Component template
+│   │   │   │   ├── verify-otp.component.css      # Component styles
+│   │   │   │   └── verify-otp.component.spec.ts  # Component tests
+│   │   │   └── create-password/  # Create/Reset password page component
+│   │   │       ├── create-password.component.ts      # Component logic
+│   │   │       ├── create-password.component.html    # Component template
+│   │   │       ├── create-password.component.css     # Component styles
+│   │   │       └── create-password.component.spec.ts # Component tests
+│   │   ├── models/           # Auth models
+│   │   ├── pages/            # Auth pages (container components if any)
+│   │   ├── services/         # Auth services
+│   │   └── auth.routes.ts    # Auth routing configuration
 │   ├── components/           # Feature-specific components
 │   │   └── .gitkeep
 │   ├── interfaces/           # TypeScript interfaces/models
@@ -157,22 +162,24 @@ dist/
 ## Directory Descriptions
 
 ### Core Module (`core/`)
-Contains application-wide singleton services, guards, interceptors, and core pages that are used across the entire application.
+Contains application-wide singleton services, guards, interceptors, and layouts that are used across the entire application.
 
 - **guards/**: Route guards for authentication and authorization
 - **interceptors/**: HTTP interceptors for request/response handling
 - **layouts/**: Main layout components (header, footer, sidebar, etc.)
-- **pages/**: Core authentication pages
-  - **login/**: Login page component with form handling and authentication
-  - **register/**: User registration page with form validation
-  - **forgot-password/**: Forgot password page to request OTP via email
-  - **verify-otp/**: OTP verification page with 6-digit code input
-  - **create-password/**: Create/reset password page after OTP verification
 - **services/**: Singleton services (authentication, API, configuration)
 
 ### Features Module (`features/`)
 Contains feature-specific modules organized by domain/functionality. Each feature is self-contained with its own components, services, and pages.
 
+#### Auth Feature (`features/auth/`)
+- **components/**: Authentication components (Login, Register, Forgot Password, etc.)
+- **models/**: Auth-specific models
+- **pages/**: Auth container pages
+- **services/**: Auth-specific services
+- **auth.routes.ts**: Auth routing configuration
+
+#### General Features
 - **components/**: Feature-specific components
 - **interfaces/**: TypeScript interfaces and models for the feature
 - **pages/**: Feature pages/routes

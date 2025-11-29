@@ -1,12 +1,12 @@
 import { Component, inject, OnDestroy, input } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
+import { AuthPromo } from '../auth-promo/auth-promo';
 import { AuthService } from 'auth';
-import { passwordMatchValidator } from '../../../shared/validators/password-match.validator';
-import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
-import { AuthInputComponent } from '../../../shared/components/UI/auth-input/auth-input.component';
-import { AuthLinkComponent } from '../../../shared/components/UI/auth-link/auth-link.component';
+import { passwordMatchValidator } from '../../../../shared/validators/password-match.validator';
+import { SubmitButtonComponent } from '../../../../shared/components/UI/submit-button/submit-button.component';
+import { AuthInputComponent } from '../../../../shared/components/UI/auth-input/auth-input.component';
+import { AuthLinkComponent } from '../../../../shared/components/UI/auth-link/auth-link.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 
