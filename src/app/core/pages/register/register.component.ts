@@ -114,15 +114,11 @@ export class RegisterComponent implements OnDestroy {
             }, 2000);
           } else {
             // Response without token (error from server)
-            const errorMsg = response?.message || 'Registration failed. Please try again.';
-            this.toastr.error(errorMsg, 'Error');
             console.log('Registration Failed:', response);
           }
         },
         error: (error: HttpErrorResponse) => {
           this.isLoading = false;
-          const errorMsg = error.error?.message || error.message || 'An error occurred. Please try again.';
-          this.toastr.error(errorMsg, 'Error');
           console.error('Registration error:', error);
         }
       });

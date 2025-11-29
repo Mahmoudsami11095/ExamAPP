@@ -133,14 +133,11 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
             this.startTimer();
             this.toastr.success('OTP resent successfully', 'Success');
           } else {
-            const errorMsg = response?.message || response?.info || 'Failed to resend OTP. Please try again.';
-            this.toastr.error(errorMsg, 'Error');
+            // const errorMsg = response?.message || response?.info || 'Failed to resend OTP. Please try again.';
           }
         },
         error: (error: any) => {
           this.isLoading = false;
-          const errorMsg = error.formattedMessage || 'An error occurred. Please try again.';
-          this.toastr.error(errorMsg, 'Error');
           console.error('Resend OTP error:', error);
         }
       });
@@ -171,24 +168,18 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
 
           // Check if response is an HTTP error (when catchError returns error as value)
           if (response && typeof response.status === 'number' && response.status !== 200) {
-            const errorMsg = response.error?.message || response.message || 'Invalid OTP code. Please try again.';
-            this.toastr.error(errorMsg, 'Error');
             this.otpForm.reset();
             console.log('Verify OTP Failed:', response);
             return;
           }
 
           // Response without success message or error status
-          const errorMsg = response?.message || response?.status || 'Invalid OTP code. Please try again.';
-          this.toastr.error(errorMsg, 'Error');
           // Clear form
           this.otpForm.reset();
           console.log('Verify OTP Failed:', response);
         },
         error: (error: any) => {
           this.isLoading = false;
-          const errorMsg = error.error?.message || error.message || 'An error occurred. Please try again.';
-          this.toastr.error(errorMsg, 'Error');
           // Clear form on error
           this.otpForm.reset();
           console.error('Verify OTP error:', error);

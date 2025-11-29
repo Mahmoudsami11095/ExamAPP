@@ -1,4 +1,6 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
@@ -11,6 +13,7 @@ export interface HttpErrorWithMessage extends HttpErrorResponse {
  * Attaches a formattedMessage property to the error object for easy access in components.
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  const toastr = inject(ToastrService);
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let formattedMessage = '';
@@ -29,6 +32,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       } else {
         formattedMessage = error.error?.message || error.message || 'An error occurred. Please try again.';
       }
+
+      // Show error toast
+      toastr.error(formattedMessage);
 
       // Attach formatted message to error object
       const errorWithMessage: HttpErrorWithMessage = {

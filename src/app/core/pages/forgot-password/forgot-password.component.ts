@@ -55,8 +55,6 @@ export class ForgotPasswordComponent implements OnDestroy {
           // Check if response is an error 
           if (response && response.status && response.status !== 200) {
             // This is an error response
-            const errorMsg = response.error?.message || response.message;
-            this.toastr.error(errorMsg, 'Error');
             console.log('Forgot Password Failed:', response);
             return;
           }
@@ -70,15 +68,11 @@ export class ForgotPasswordComponent implements OnDestroy {
             this.step.set(2);
           } else {
             // Response without success message (might be an error message)
-            const errorMsg = response?.message || response?.info || 'Failed to send OTP. Please try again.';
-            this.toastr.error(errorMsg, 'Error');
             console.log('Forgot Password Failed:', response);
           }
         },
         error: (error: any) => {
           this.isLoading = false;
-          const errorMsg = error.error?.message || error.message || 'An error occurred. Please try again.';
-          this.toastr.error(errorMsg, 'Error');
           console.error('Forgot Password error:', error);
         }
       });

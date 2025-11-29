@@ -71,16 +71,12 @@ export class Login implements OnInit, OnDestroy {
             console.log('Login successful:', response);
           } else {
             // Response without token (error from server)
-            const errorMsg = response?.message || 'Login failed. Please try again.';
-            this.toastr.error(errorMsg, 'Error');
             console.log('Login Failed:', response);
 
           }
         },
         error: (error: HttpErrorResponse) => {
           this.isLoading = false;
-          const errorMsg = error.error?.message || error.message || 'An error occurred. Please try again.';
-          this.toastr.error(errorMsg, 'Error');
           console.error('Login error:', error);
         }
       });

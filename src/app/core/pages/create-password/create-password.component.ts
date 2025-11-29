@@ -69,8 +69,6 @@ export class CreatePasswordComponent implements OnDestroy {
 
           // Check if response is an HTTP error (when catchError returns error as value)
           if (response && typeof response.status === 'number' && response.status !== 200) {
-            const errorMsg = response.error?.message || response.message || 'Failed to reset password. Please try again.';
-            this.toastr.error(errorMsg, 'Error');
             console.log('Reset Password Failed:', response);
             return;
           }
@@ -85,15 +83,11 @@ export class CreatePasswordComponent implements OnDestroy {
               this.router.navigate(['/auth/login'], { queryParams: { passwordReset: 'true' } });
             }, 2000);
           } else {
-            const errorMsg = response?.message || 'Failed to reset password. Please try again.';
-            this.toastr.error(errorMsg, 'Error');
             console.log('Reset Password Failed:', response);
           }
         },
         error: (error: any) => {
           this.isLoading = false;
-          const errorMsg = error.error?.message || error.message || 'An error occurred. Please try again.';
-          this.toastr.error(errorMsg, 'Error');
           console.error('Reset Password error:', error);
         }
       });
