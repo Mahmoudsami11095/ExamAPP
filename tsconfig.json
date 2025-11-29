@@ -5,7 +5,7 @@
   "compilerOptions": {
     "paths": {
       "auth": [
-        "./projects/auth/src/public-api.ts"
+        "./dist/auth"
       ]
     },
     "strict": true,
