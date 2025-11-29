@@ -1,0 +1,27 @@
+<div>
+    <label [for]="id()" class="block text-sm font-medium text-gray-700 mb-2">
+        {{ label() }}
+    </label>
+    <div class="relative">
+        <input [id]="id()" [type]="type()" [formControl]="$any(control())"
+            [class.border-red-500]="control().invalid && control().touched"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400"
+            [placeholder]="placeholder()" />
+    </div>
+    @if (control().invalid && control().touched) {
+    <div class="mt-1 text-sm text-red-600">
+        @if (control().errors?.['required']) {
+        <span>{{ label() }} is required</span>
+        }
+        @if (control().errors?.['email']) {
+        <span>Please enter a valid email</span>
+        }
+        @if (control().errors?.['minlength']) {
+        <span>{{ label() }} must be at least {{ control().errors?.['minlength'].requiredLength }} characters</span>
+        }
+        @if (control().errors?.['pattern']) {
+        <span>Please enter a valid {{ label() }}</span>
+        }
+    </div>
+    }
+</div>

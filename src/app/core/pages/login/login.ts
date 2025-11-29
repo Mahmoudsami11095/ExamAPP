@@ -4,13 +4,14 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService, LoginRequest, LoginResponse } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
+import { AuthInputComponent } from '../../../shared/components/UI/auth-input/auth-input.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent, AuthInputComponent],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })

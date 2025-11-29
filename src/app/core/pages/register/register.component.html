@@ -7,87 +7,24 @@
     <div class="flex gap-4">
       <!-- First Name Field -->
       <div class="flex-1">
-        <label for="firstName" class="block text-sm font-medium text-gray-700 ">
-          First name
-        </label>
-        <input id="firstName" type="text" formControlName="firstName"
-          [class.border-red-500]="firstName?.invalid && firstName?.touched"
-          class="w-full px-4 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400"
-          placeholder="Ahmed" />
-        @if (firstName?.invalid && firstName?.touched) {
-        <div class=" text-sm text-red-600">
-          @if (firstName?.errors?.['required']) {
-          <span>First name is required</span>
-          }
-          @if (firstName?.errors?.['minlength']) {
-          <span>First name must be at least 2 characters</span>
-          }
-        </div>
-        }
+        <app-auth-input id="firstName" type="text" label="First name" placeholder="Ahmed"
+          [control]="firstName!"></app-auth-input>
       </div>
 
       <!-- Last Name Field -->
       <div class="flex-1">
-        <label for="lastName" class="block text-sm font-medium text-gray-700 ">
-          Last name
-        </label>
-        <input id="lastName" type="text" formControlName="lastName"
-          [class.border-red-500]="lastName?.invalid && lastName?.touched"
-          class="w-full px-4 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400"
-          placeholder="Abdullah" />
-        @if (lastName?.invalid && lastName?.touched) {
-        <div class=" text-sm text-red-600">
-          @if (lastName?.errors?.['required']) {
-          <span>Last name is required</span>
-          }
-          @if (lastName?.errors?.['minlength']) {
-          <span>Last name must be at least 2 characters</span>
-          }
-        </div>
-        }
+        <app-auth-input id="lastName" type="text" label="Last name" placeholder="Abdullah"
+          [control]="lastName!"></app-auth-input>
       </div>
     </div>
 
     <!-- Username Field -->
-    <div>
-      <label for="username" class="block text-sm font-medium text-gray-700">
-        Username
-      </label>
-      <input id="username" type="text" formControlName="username"
-        [class.border-red-500]="username?.invalid && username?.touched"
-        class="w-full px-4 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400"
-        placeholder="user123" />
-      @if (username?.invalid && username?.touched) {
-      <div class=" text-sm text-red-600">
-        @if (username?.errors?.['required']) {
-        <span>Username is required</span>
-        }
-        @if (username?.errors?.['minlength']) {
-        <span>Username must be at least 3 characters</span>
-        }
-      </div>
-      }
-    </div>
+    <app-auth-input id="username" type="text" label="Username" placeholder="user123"
+      [control]="username!"></app-auth-input>
 
     <!-- Email Field -->
-    <div>
-      <label for="email" class="block text-sm font-medium text-gray-700">
-        Email
-      </label>
-      <input id="email" type="email" formControlName="email" [class.border-red-500]="email?.invalid && email?.touched"
-        class="w-full px-4 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400"
-        placeholder="user@example.com" />
-      @if (email?.invalid && email?.touched) {
-      <div class=" text-sm text-red-600">
-        @if (email?.errors?.['required']) {
-        <span>Email is required</span>
-        }
-        @if (email?.errors?.['email']) {
-        <span>Please enter a valid email</span>
-        }
-      </div>
-      }
-    </div>
+    <app-auth-input id="email" type="email" label="Email" placeholder="user@example.com"
+      [control]="email!"></app-auth-input>
 
     <!-- Phone Field -->
     <div>
@@ -118,27 +55,8 @@
     </div>
 
     <!-- Password Field -->
-    <div>
-      <label for="password" class="block text-sm font-medium text-gray-700">
-        Password
-      </label>
-      <div class="relative">
-        <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
-          [class.border-red-500]="password?.invalid && password?.touched"
-          class="w-full px-4 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400"
-          placeholder="Enter your password" />
-      </div>
-      @if (password?.invalid && password?.touched) {
-      <div class=" text-sm text-red-600">
-        @if (password?.errors?.['required']) {
-        <span>Password is required</span>
-        }
-        @if (password?.errors?.['minlength']) {
-        <span>Password must be at least 6 characters</span>
-        }
-      </div>
-      }
-    </div>
+    <app-auth-input id="password" [type]="showPassword ? 'text' : 'password'" label="Password"
+      placeholder="Enter your password" [control]="password!"></app-auth-input>
 
     <!-- Confirm Password Field -->
     <div>

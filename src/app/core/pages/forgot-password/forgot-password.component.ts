@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
+import { AuthInputComponent } from '../../../shared/components/UI/auth-input/auth-input.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { VerifyOtpComponent } from '../verify-otp/verify-otp.component';
@@ -12,7 +13,7 @@ import { CreatePasswordComponent } from '../create-password/create-password.comp
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent, VerifyOtpComponent, CreatePasswordComponent],
+  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent, VerifyOtpComponent, CreatePasswordComponent, AuthInputComponent],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css'
 })
