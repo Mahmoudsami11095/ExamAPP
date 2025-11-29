@@ -105,7 +105,7 @@ export class RegisterComponent implements OnDestroy {
           if (response && response.token) {
             const successMsg = response.message || 'Registration successful! Redirecting to login...';
             this.toastr.success(successMsg, 'Success');
-            // TODO: Store token if needed
+            localStorage.setItem('token', response.token);
             console.log('Registration successful:', response);
 
             // Redirect to login after 2 seconds

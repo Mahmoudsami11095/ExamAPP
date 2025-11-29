@@ -67,7 +67,8 @@ export class Login implements OnInit, OnDestroy {
           if (response && response.token) {
             const successMsg = (response.message.toUpperCase() + response.message) || 'Login successful!';
             this.toastr.success(successMsg, 'Success');
-            // TODO: Store token and redirect user
+            localStorage.setItem('token', response.token);
+            // TODO: Redirect user
             console.log('Login successful:', response);
           } else {
             // Response without token (error from server)
