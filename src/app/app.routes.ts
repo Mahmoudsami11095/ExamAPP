@@ -2,27 +2,39 @@ import { Routes } from '@angular/router';
 import { Login } from './core/pages/login/login';
 import { RegisterComponent } from './core/pages/register/register.component';
 import { ForgotPasswordComponent } from './core/pages/forgot-password/forgot-password.component';
+import { AuthLayoutComponent } from './core/layouts/auth-layout/auth-layout.component';
 
 export const routes: Routes = [
     {
         path: '',
-        component: Login
+        redirectTo: 'auth/login',
+        pathMatch: 'full'
     },
     {
-        path: 'auth/login',
-        component: Login
-    },
-    {
-        path: 'auth/register',
-        component: RegisterComponent
-    },
-    {
-        path: 'auth/forgot-password',
-        component: ForgotPasswordComponent
+        path: 'auth',
+        component: AuthLayoutComponent,
+        children: [
+            {
+                path: 'login',
+                component: Login
+            },
+            {
+                path: 'register',
+                component: RegisterComponent
+            },
+            {
+                path: 'forgot-password',
+                component: ForgotPasswordComponent
+            },
+            {
+                path: '',
+                redirectTo: 'login',
+                pathMatch: 'full'
+            }
+        ]
     },
     {
         path: '**',
         redirectTo: '/auth/login'
     }
-
 ];

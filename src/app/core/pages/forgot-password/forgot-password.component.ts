@@ -12,7 +12,7 @@ import { CreatePasswordComponent } from '../create-password/create-password.comp
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthPromo, SubmitButtonComponent, VerifyOtpComponent, CreatePasswordComponent],
+  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent, VerifyOtpComponent, CreatePasswordComponent],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css'
 })

@@ -12,7 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthPromo, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

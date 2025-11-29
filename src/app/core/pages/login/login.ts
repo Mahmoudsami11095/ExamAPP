@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
-  imports: [AuthPromo, ReactiveFormsModule, RouterLink, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
