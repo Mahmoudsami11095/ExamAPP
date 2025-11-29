@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, ElementRef, QueryList, inject, Output, EventEmitter, input } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
@@ -16,7 +16,6 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   private fb = inject(FormBuilder);
-  private router = inject(Router);
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
   private destroy$ = new Subject<void>();
