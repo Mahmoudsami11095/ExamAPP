@@ -5,20 +5,6 @@
     <i class="fas fa-arrow-left text-xl"></i>
   </button>
 
-  <!-- Title -->
-  <h1 class="text-3xl font-bold text-gray-900">Verify OTP</h1>
-
-  <!-- Instructions -->
-  <div class="text-gray-600">
-    <p>
-      Please enter the 6-digits code we have sent to:
-      <span class="font-medium text-gray-900">{{ email }}</span>.
-      <button type="button" (click)="editEmail()"
-        class="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-        Edit
-      </button>
-    </p>
-  </div>
 
   <!-- OTP Form -->
   <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="space-y-6">

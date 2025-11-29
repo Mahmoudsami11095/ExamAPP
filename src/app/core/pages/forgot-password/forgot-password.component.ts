@@ -1,6 +1,6 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
 import { AuthService } from 'auth';
 import { SubmitButtonComponent } from '../../../shared/components/UI/submit-button/submit-button.component';
@@ -18,15 +18,16 @@ import { CreatePasswordComponent } from '../create-password/create-password.comp
 })
 export class ForgotPasswordComponent implements OnDestroy {
   private fb = inject(FormBuilder);
-  private router = inject(Router);
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
   private destroy$ = new Subject<void>();
 
   forgotPasswordForm: FormGroup;
   isLoading = false;
-  step = 1;
-  emailValue = '';
+
+  // State management using Signals
+  step = signal<number>(1);
+  email = signal<string>('');
 
   constructor() {
     this.forgotPasswordForm = this.fb.group({
@@ -34,7 +35,7 @@ export class ForgotPasswordComponent implements OnDestroy {
     });
   }
 
-  get email(): AbstractControl | null {
+  get emailControl(): AbstractControl | null {
     return this.forgotPasswordForm.get('email');
   }
 
@@ -43,7 +44,7 @@ export class ForgotPasswordComponent implements OnDestroy {
       this.isLoading = true;
 
       const { email } = this.forgotPasswordForm.value;
-      this.emailValue = email;
+      this.email.set(email);
 
       this.authService.forgotPassword({ email }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
@@ -64,7 +65,7 @@ export class ForgotPasswordComponent implements OnDestroy {
             this.toastr.success(successMsg, 'Success');
             console.log('OTP sent to your email', response);
             // Advance to next step
-            this.step = 2;
+            this.step.set(2);
           } else {
             // Response without success message (might be an error message)
             const errorMsg = response?.message || response?.info || 'Failed to send OTP. Please try again.';
@@ -85,11 +86,11 @@ export class ForgotPasswordComponent implements OnDestroy {
   }
 
   onOtpVerified() {
-    this.step = 3;
+    this.step.set(3);
   }
 
   onBack() {
-    this.step = 1;
+    this.step.set(1);
   }
 
   ngOnDestroy() {

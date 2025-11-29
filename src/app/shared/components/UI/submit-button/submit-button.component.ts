@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-submit-button',
@@ -8,11 +8,11 @@ import { Component, Input } from '@angular/core';
   styleUrl: './submit-button.component.css',
 })
 export class SubmitButtonComponent {
-  @Input() buttonText: string = 'Submit';
-  @Input() loadingText: string = 'Loading...';
-  @Input() isLoading: boolean = false;
-  @Input() disabled: boolean = false;
-  @Input() type: 'submit' | 'button' | 'reset' = 'submit';
-  @Input() additionalClasses: string = '';
+  buttonText = input<string>('Submit');
+  loadingText = input<string>('Loading...');
+  isLoading = input<boolean>(false);
+  disabled = input<boolean>(false);
+  type = input<'submit' | 'button' | 'reset'>('submit');
+  additionalClasses = input<string>('');
 }
 

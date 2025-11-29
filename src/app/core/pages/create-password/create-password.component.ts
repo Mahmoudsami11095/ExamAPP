@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, Input } from '@angular/core';
+import { Component, inject, OnDestroy, input } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
@@ -11,7 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-create-password',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthPromo, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent],
   templateUrl: './create-password.component.html',
   styleUrl: './create-password.component.css',
 })
@@ -22,7 +22,7 @@ export class CreatePasswordComponent implements OnDestroy {
   private toastr = inject(ToastrService);
   private destroy$ = new Subject<void>();
 
-  @Input() email: string = '';
+  email = input<string>('');
 
   resetPasswordForm: FormGroup;
   isLoading = false;
@@ -61,7 +61,7 @@ export class CreatePasswordComponent implements OnDestroy {
       const { newPassword } = this.resetPasswordForm.value;
 
       // Call API to reset password
-      this.authService.resetPassword({ email: this.email, newPassword }).pipe(takeUntil(this.destroy$)).subscribe({
+      this.authService.resetPassword({ email: this.email(), newPassword }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
 

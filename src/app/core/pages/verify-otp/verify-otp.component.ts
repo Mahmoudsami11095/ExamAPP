@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, ElementRef, QueryList, inject, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, ElementRef, QueryList, inject, Output, EventEmitter, input } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthPromo } from '../../../features/auth/components/auth-promo/auth-promo';
@@ -10,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-verify-otp',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AuthPromo, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent],
   templateUrl: './verify-otp.component.html',
   styleUrl: './verify-otp.component.css'
 })
@@ -21,7 +21,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   private toastr = inject(ToastrService);
   private destroy$ = new Subject<void>();
 
-  @Input() email: string = '';
+  email = input<string>('');
   @Output() verified = new EventEmitter<void>();
   @Output() back = new EventEmitter<void>();
 
@@ -124,7 +124,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isLoading = true;
 
       // Resend OTP by calling forgot password API again
-      this.authService.forgotPassword({ email: this.email }).pipe(takeUntil(this.destroy$)).subscribe({
+      this.authService.forgotPassword({ email: this.email() }).pipe(takeUntil(this.destroy$)).subscribe({
         next: (response: any) => {
           this.isLoading = false;
 
