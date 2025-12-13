@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { AuthPromo } from '../auth-promo/auth-promo';
 import { AuthService, LoginRequest, LoginResponse } from 'auth';
 import { SubmitButtonComponent } from '../../../../shared/components/UI/submit-button/submit-button.component';
@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
+
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, RouterLink, SubmitButtonComponent, AuthInputComponent, AuthLinkComponent],
@@ -18,6 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class Login implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
+  private _router = inject(Router);
   private route = inject(ActivatedRoute);
   private toastr = inject(ToastrService);
   private destroy$ = new Subject<void>();
@@ -68,7 +70,7 @@ export class Login implements OnInit, OnDestroy {
             const successMsg = (response.message.toUpperCase() + response.message) || 'Login successful!';
             this.toastr.success(successMsg, 'Success');
             localStorage.setItem('token', response.token);
-            // TODO: Redirect user
+            this._router.navigate(['/diplomas']);
             console.log('Login successful:', response);
           } else {
             // Response without token (error from server)
