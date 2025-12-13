@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { LoginRequest, RegisterRequest, ForgotPasswordRequest, VerifyResetCodeRequest, ResetPasswordRequest } from '../interfaces/auth-requests';
-import { LoginResponse, StatusResponse, InfoResponse, MessageResponse } from '../interfaces/auth-responses';
+import { LoginResponse, StatusResponse, InfoResponse, MessageResponse, UserInfoResponse } from '../interfaces/auth-responses';
 
 export abstract class AuthAPI {
   abstract register(data: RegisterRequest): Observable<LoginResponse>;
@@ -12,5 +12,5 @@ export abstract class AuthAPI {
   //abstract deleteMyAccount(data: any): Observable<any>;
   //abstract editProfile(data: any): Observable<any>;
   //abstract logout(data: any): Observable<any>;
-  //abstract getLoggedUserInfo(data: any): Observable<any>;
+  abstract getLoggedUserInfo(): Observable<UserInfoResponse>;
 }

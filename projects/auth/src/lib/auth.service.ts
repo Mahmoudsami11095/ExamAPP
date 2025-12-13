@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { LoginResponse, StatusResponse, InfoResponse, MessageResponse } from './interfaces/auth-responses';
+import { LoginResponse, StatusResponse, InfoResponse, MessageResponse, UserInfoResponse } from './interfaces/auth-responses';
 import { LoginRequest, RegisterRequest, ForgotPasswordRequest, VerifyResetCodeRequest, ResetPasswordRequest } from './interfaces/auth-requests';
 import { AuthAPIAdaptorService } from './adaptor/auth-api.adaptor';
 import { AuthStatusAdaptorService } from './adaptor/auth-status.adaptor';
@@ -60,6 +60,13 @@ export class AuthService implements AuthAPI {
     return this._httpClient.put<MessageResponse>(this.getUrl(AuthEndPoint.RESETPASSWORD), data)
       .pipe(
         map((response) => this._authMessageAdaptorService.adapt(response))
+      );
+  }
+
+  getLoggedUserInfo(): Observable<UserInfoResponse> {
+    return this._httpClient.get<UserInfoResponse>(this.getUrl(AuthEndPoint.GETLOGGEDUSERINFO))
+      .pipe(
+        map((response) => response)
       );
   }
 
