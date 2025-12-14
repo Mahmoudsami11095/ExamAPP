@@ -18,4 +18,10 @@ export class ExamsService {
             map(response => response.exams)
         );
     }
+
+    getExamById(examId: string): Observable<Exam> {
+        return this.http.get<{ message: string, exam: Exam }>(`${this.apiUrl}/exams/${examId}`).pipe(
+            map(response => response.exam)
+        );
+    }
 }

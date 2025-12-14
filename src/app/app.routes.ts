@@ -18,6 +18,11 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/exams/exams.component').then(m => m.ExamsComponent),
                 title: 'Exams'
             },
+            {
+                path: 'quiz/:id',
+                loadComponent: () => import('./features/questions/questions.component').then(m => m.QuestionsComponent),
+                title: 'Quiz'
+            },
             { path: '', redirectTo: 'diplomas', pathMatch: 'full' }
         ]
     },

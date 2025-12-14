@@ -13,8 +13,8 @@
     <!-- Exams List -->
     <div class="space-y-4">
         @for (exam of exams(); track exam._id) {
-        <div
-            class="bg-[#F0F8FF] rounded-lg p-4 flex justify-between items-center hover:shadow-md transition-shadow cursor-pointer">
+        <div class="bg-[#F0F8FF] rounded-lg p-4 flex justify-between items-center hover:shadow-md transition-shadow cursor-pointer"
+            [routerLink]="['/quiz', exam._id]">
 
             <!-- Left Side: Title & Questions -->
             <div>
