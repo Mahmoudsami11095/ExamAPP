@@ -8,7 +8,12 @@ export const routes: Routes = [
         component: MainLayoutComponent,
         canActivate: [authGuard],
         children: [
-
+            {
+                path: 'diplomas',
+                loadComponent: () => import('./features/diplomas/diplomas.component').then(m => m.DiplomasComponent),
+                title: 'Diplomas'
+            },
+            { path: '', redirectTo: 'diplomas', pathMatch: 'full' }
         ]
     },
     {
@@ -17,6 +22,6 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'auth/login'
+        redirectTo: 'diplomas'
     }
 ];

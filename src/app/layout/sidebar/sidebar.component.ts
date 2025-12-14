@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
-import { AuthService } from 'auth';
+import { AuthService, UserInfoResponse } from 'auth';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,8 +12,13 @@ import { AuthService } from 'auth';
 export class SidebarComponent implements OnInit {
   _authService = inject(AuthService);
   _router = inject(Router);
-  user = signal<any>(null);
+  user = signal<UserInfoResponse['user'] | null>(null);
   isDropdownOpen = signal(false);
+
+  firstName = computed(() => this.user()?.firstName ?? '');
+  lastName = computed(() => this.user()?.lastName ?? '');
+  email = computed(() => this.user()?.email ?? '');
+  profileImage = computed(() => this.user()?._id ? `https://i.pravatar.cc/150?u=${this.user()?._id}` : '');
 
   ngOnInit(): void {
     this._authService.getLoggedUserInfo().subscribe({
