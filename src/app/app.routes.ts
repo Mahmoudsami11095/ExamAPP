@@ -13,6 +13,11 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/diplomas/diplomas.component').then(m => m.DiplomasComponent),
                 title: 'Diplomas'
             },
+            {
+                path: 'exams',
+                loadComponent: () => import('./features/exams/exams.component').then(m => m.ExamsComponent),
+                title: 'Exams'
+            },
             { path: '', redirectTo: 'diplomas', pathMatch: 'full' }
         ]
     },
