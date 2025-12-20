@@ -25,3 +25,16 @@ export interface ResetPasswordRequest {
     email: string;
     newPassword: string;
 }
+
+export interface ChangePasswordRequest {
+    oldPassword: string;
+    password: string;
+    rePassword: string;
+}
+
+export interface EditProfileRequest {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+}
