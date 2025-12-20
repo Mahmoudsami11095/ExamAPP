@@ -19,6 +19,11 @@ export const routes: Routes = [
                 title: 'Exams'
             },
             {
+                path: 'settings',
+                loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent),
+                title: 'Settings'
+            },
+            {
                 path: 'quiz/:id',
                 loadComponent: () => import('./features/questions/questions.component').then(m => m.QuestionsComponent),
                 title: 'Quiz'
