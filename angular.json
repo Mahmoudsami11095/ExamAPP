@@ -140,10 +140,7 @@
           "builder": "@angular/build:karma",
           "options": {
             "tsConfig": "projects/auth/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": []
           }
         }
       }
