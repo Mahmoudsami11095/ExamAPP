@@ -39,6 +39,8 @@
     "@angular/platform-browser": "20.3.14",
     "@angular/router": "20.3.14",
     "@fortawesome/fontawesome-free": "^7.1.0",
+    "@ngrx/operators": "^21.0.0",
+    "@ngrx/signals": "^21.0.0",
     "@tailwindcss/postcss": "^4.1.17",
     "ngx-toastr": "^19.1.0",
     "postcss": "^8.5.6",
