@@ -7,6 +7,7 @@ import { routes } from './app.routes';
 import { headerInterceptor } from './core/interceptors/header.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { provideToastr } from 'ngx-toastr';
+import { AUTH_BASE_URL } from 'auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([headerInterceptor, errorInterceptor])),
     provideAnimations(),
-    provideToastr()
+    provideToastr(),
+    { provide: AUTH_BASE_URL, useValue: 'https://exam.elevateegy.com/api/v1' }
   ]
 };
