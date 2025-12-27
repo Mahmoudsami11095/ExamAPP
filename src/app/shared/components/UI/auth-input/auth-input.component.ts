@@ -17,4 +17,5 @@ export class AuthInputComponent {
     id = input.required<string>();
     externalError = input<boolean>(false);
     externalErrorMessage = input<string>('');
+    prefixText = input<string>('');
 }

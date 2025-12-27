@@ -27,31 +27,8 @@
       [control]="email!"></app-auth-input>
 
     <!-- Phone Field -->
-    <div>
-      <label for="phone" class="block text-sm font-medium text-gray-700">
-        Phone
-      </label>
-      <div class="flex space-x-2">
-        <!-- Country Code Selector -->
-        <div class="flex items-center px-3 py-1 border border-gray-300 rounded-lg bg-gray-50">
-          <span class="text-lg mr-2">🇪🇬</span>
-          <span class="text-sm font-medium text-gray-700">EG(+2)</span>
-        </div>
-        <!-- Phone Number Input -->
-        <input id="phone" type="tel" formControlName="phone" [class.border-red-500]="phone?.invalid && phone?.touched"
-          class="flex-1 px-4 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400"
-          placeholder="1012345678" maxlength="11" />
-      </div>
-      @if (phone?.invalid && phone?.touched) {
-      <div class="text-sm text-red-600">
-        @if (phone?.errors?.['required']) {
-        <span>Phone number is required</span>
-        } @if (phone?.errors?.['pattern']) {
-        <span>Please enter a valid 11-digit Egyptian phone number</span>
-        }
-      </div>
-      }
-    </div>
+    <app-auth-input id="phone" type="tel" label="Phone" placeholder="1012345678" [control]="phone!"
+      prefixText="EG(+2)"></app-auth-input>
 
     <!-- Password Field -->
     <app-auth-input id="password" [type]="showPassword ? 'text' : 'password'" label="Password"
