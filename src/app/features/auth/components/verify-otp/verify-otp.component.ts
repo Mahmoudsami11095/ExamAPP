@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChildren, ElementRef, QueryList, inject, Output, EventEmitter, input } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, ValidatorFn } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthPromo } from '../auth-promo/auth-promo';
-import { AuthService } from 'auth';
+import { AuthService, InfoResponse, StatusResponse } from 'auth';
+import { HttpErrorResponse } from '@angular/common/http';
 import { SubmitButtonComponent } from '../../../../shared/components/UI/submit-button/submit-button.component';
 import { AuthLinkComponent } from '../../../../shared/components/UI/auth-link/auth-link.component';
 import { ToastrService } from 'ngx-toastr';
@@ -28,14 +29,14 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   otpForm: FormGroup;
   isLoading = false;
   timer = 60;
-  timerInterval: any;
+  timerInterval?: ReturnType<typeof setInterval>;
   canResend = false;
 
   @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
   constructor() {
     // Create form with 6 OTP fields dynamically
-    const otpControls: { [key: string]: any } = {};
+    const otpControls: Record<string, [string, ValidatorFn[]]> = {};
     for (let i = 1; i <= 6; i++) {
       otpControls[`otp${i}`] = ['', [Validators.required, Validators.maxLength(1), Validators.pattern(/^[0-9]$/)]];
     }
@@ -85,8 +86,8 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     inputRef?.nativeElement.focus();
   }
 
-  onInput(event: any, currentIndex: number) {
-    const input = event.target;
+  onInput(event: Event, currentIndex: number) {
+    const input = event.target as HTMLInputElement;
     const value = input.value;
 
     // Move to next input if value is entered
@@ -125,7 +126,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
 
       // Resend OTP by calling forgot password API again
       this.authService.forgotPassword({ email: this.email() }).pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response: any) => {
+        next: (response: InfoResponse) => {
           this.isLoading = false;
 
           if (response && response.message === 'success') {
@@ -136,7 +137,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
             // const errorMsg = response?.message || response?.info || 'Failed to resend OTP. Please try again.';
           }
         },
-        error: (error: any) => {
+        error: (error: HttpErrorResponse) => {
           this.isLoading = false;
           console.error('Resend OTP error:', error);
         }
@@ -156,7 +157,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
 
       // Verify OTP with backend
       this.authService.verifyResetCode({ resetCode: otpCode }).pipe(takeUntil(this.destroy$)).subscribe({
-        next: (response: any) => {
+        next: (response: StatusResponse) => {
           this.isLoading = false;
 
           // Check if response indicates success (API returns { "status": "Success" })
@@ -166,19 +167,12 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
           }
 
-          // Check if response is an HTTP error (when catchError returns error as value)
-          if (response && typeof response.status === 'number' && response.status !== 200) {
-            this.otpForm.reset();
-            console.log('Verify OTP Failed:', response);
-            return;
-          }
-
           // Response without success message or error status
           // Clear form
           this.otpForm.reset();
           console.log('Verify OTP Failed:', response);
         },
-        error: (error: any) => {
+        error: (error: HttpErrorResponse) => {
           this.isLoading = false;
           // Clear form on error
           this.otpForm.reset();
