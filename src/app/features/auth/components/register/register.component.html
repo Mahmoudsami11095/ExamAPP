@@ -1,0 +1,50 @@
+<div class="w-full max-w-md space-y-8">
+  <!-- Title -->
+  <h1 class="text-3xl font-bold text-gray-900">Create Account</h1>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-5">
+    <!-- First Name and Last Name Fields (Side by Side) -->
+    <div class="flex gap-4">
+      <!-- First Name Field -->
+      <div class="flex-1">
+        <app-auth-input id="firstName" type="text" label="First name" placeholder="Ahmed"
+          [control]="firstName!"></app-auth-input>
+      </div>
+
+      <!-- Last Name Field -->
+      <div class="flex-1">
+        <app-auth-input id="lastName" type="text" label="Last name" placeholder="Abdullah"
+          [control]="lastName!"></app-auth-input>
+      </div>
+    </div>
+
+    <!-- Username Field -->
+    <app-auth-input id="username" type="text" label="Username" placeholder="user123"
+      [control]="username!"></app-auth-input>
+
+    <!-- Email Field -->
+    <app-auth-input id="email" type="email" label="Email" placeholder="user@example.com"
+      [control]="email!"></app-auth-input>
+
+    <!-- Phone Field -->
+    <app-auth-input id="phone" type="tel" label="Phone" placeholder="1012345678" [control]="phone!"
+      prefixText="EG(+2)"></app-auth-input>
+
+    <!-- Password Field -->
+    <app-auth-input id="password" [type]="showPassword ? 'text' : 'password'" label="Password"
+      placeholder="Enter your password" [control]="password!"></app-auth-input>
+
+    <!-- Confirm Password Field -->
+    <app-auth-input id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'" label="Confirm Password"
+      placeholder="Confirm your password" [control]="confirmPassword!"
+      [externalError]="registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched"
+      externalErrorMessage="Passwords do not match"></app-auth-input>
+
+    <!-- Submit Button -->
+    <app-submit-button type="submit" buttonText="Create Account" loadingText="Creating account..."
+      [isLoading]="isLoading" [disabled]="registerForm.invalid"></app-submit-button>
+  </form>
+
+  <!-- Login Link -->
+  <app-auth-link text="Already have an account?" linkText="Login" [linkRoute]="['/auth/login']"></app-auth-link>
+</div>

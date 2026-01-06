@@ -1,0 +1,46 @@
+<div class="w-full max-w-md space-y-8">
+  <!-- Back Arrow -->
+  <button type="button" (click)="goBack()"
+    class="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+    <i class="fas fa-arrow-left text-xl"></i>
+  </button>
+
+
+  <!-- OTP Form -->
+  <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- OTP Input Fields -->
+    <div class="flex justify-between gap-3">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+      <input #otpInput [id]="'otp' + i" type="text" [formControlName]="'otp' + i" maxlength="1"
+        (input)="onInput($event, i - 1)" (keydown)="onKeyDown($event, i - 1)" (paste)="onPaste($event)"
+        [class.border-red-500]="otpForm.get('otp' + i)?.invalid && otpForm.get('otp' + i)?.touched"
+        class="w-14 h-14 text-center text-2xl font-semibold border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none" />
+      }
+    </div>
+
+    <!-- Resend Code Timer -->
+    <div class="text-center">
+      <p class="text-sm text-gray-500">
+        @if (!canResend) {
+        <span>You can request another code in: <span class="font-medium">{{ timer }}s</span></span>
+        }
+        @if (canResend) {
+        <span>
+          Didn't receive the code?
+          <button type="button" (click)="resendCode()"
+            class="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+            Resend
+          </button>
+        </span>
+        }
+      </p>
+    </div>
+
+    <!-- Verify Button -->
+    <app-submit-button type="submit" buttonText="Verify Code" loadingText="Verifying..." [isLoading]="isLoading"
+      [disabled]="otpForm.invalid"></app-submit-button>
+  </form>
+
+  <!-- Create Account Link -->
+  <app-auth-link text="Don't have an account?" linkText="Create yours" [linkRoute]="['/auth/register']"></app-auth-link>
+</div>

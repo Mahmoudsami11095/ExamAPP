@@ -1,0 +1,29 @@
+<div class="w-full max-w-md space-y-8">
+  <!-- Title -->
+  <h1 class="text-3xl font-bold text-gray-900">Login</h1>
+
+  <form [formGroup]="loginForm" (ngSubmit)="login()" class="space-y-6">
+    <!-- Email Field -->
+    <app-auth-input id="email" type="email" label="Email" placeholder="user@example.com"
+      [control]="email!"></app-auth-input>
+
+    <!-- Password Field -->
+    <app-auth-input id="password" [type]="showPassword ? 'text' : 'password'" label="Password"
+      placeholder="Enter your password" [control]="password!"></app-auth-input>
+
+    <!-- Forgot Password Link -->
+    <div class="flex justify-end">
+      <a [routerLink]="['/auth/forgot-password']"
+        class="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+        Forgot your password?
+      </a>
+    </div>
+
+    <!-- Submit Button -->
+    <app-submit-button type="submit" buttonText="Login" loadingText="Signing in..." [isLoading]="isLoading"
+      [disabled]="loginForm.invalid"></app-submit-button>
+  </form>
+
+  <!-- Create Account Link -->
+  <app-auth-link text="Don't have an account?" linkText="Create yours" [linkRoute]="['/auth/register']"></app-auth-link>
+</div>

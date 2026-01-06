@@ -14,9 +14,17 @@ ExamAPP/
 ├── tsconfig.spec.json        # TypeScript config for tests
 ├── .postcssrc.json           # PostCSS configuration
 ├── README.md                 # Project documentation
+├── FOLDER_STRUCTURE.md       # This file - project structure documentation
 ├── node_modules/             # Installed npm packages
 ├── public/                   # Public assets
 │   └── favicon.ico           # Site favicon
+├── dist/                     # Build output directory
+│   ├── auth/                 # Built auth library
+│   └── ExamAPP/              # Built application
+├── out-tsc/                  # TypeScript compilation output
+│   └── lib/                  # Library TypeScript output
+├── projects/                 # Angular library projects
+│   └── auth/                 # Auth library project
 └── src/                      # Source code directory
 ```
 
@@ -24,7 +32,7 @@ ExamAPP/
 
 ```
 src/
-├── index.html                # Main HTML entry point
+├── index.html                # Main HTML entry point (includes Font Awesome CDN)
 ├── main.ts                   # Application bootstrap file
 ├── styles.css                # Global styles
 └── app/                      # Application root module
@@ -37,43 +45,141 @@ app/
 ├── app.ts                    # Root component TypeScript file
 ├── app.html                  # Root component template
 ├── app.css                   # Root component styles
-├── app.config.ts             # Application configuration
+├── app.config.ts             # Application configuration (providers: HttpClient, etc.)
 ├── app.routes.ts             # Application routing configuration
 ├── app.spec.ts               # Root component test file
 ├── core/                     # Core module (singleton services, guards, interceptors)
 │   ├── guards/               # Route guards (authentication, authorization)
+│   │   └── .gitkeep
 │   ├── interceptors/         # HTTP interceptors
+│   │   └── .gitkeep
 │   ├── layouts/              # Layout components
-│   ├── pages/                # Core pages (login, error pages, etc.)
+│   │   └── .gitkeep
 │   └── services/             # Core services (singleton services)
+│       └── .gitkeep
 ├── features/                 # Feature modules (domain-specific functionality)
+│   ├── auth/                 # Authentication feature
+│   │   ├── components/       # Auth components
+│   │   │   ├── login/            # Login page component
+│   │   │   │   ├── login.ts      # Login component logic
+│   │   │   │   ├── login.html    # Login component template
+│   │   │   │   ├── login.css     # Login component styles
+│   │   │   │   └── login.spec.ts # Login component tests
+│   │   │   ├── register/         # Register page component
+│   │   │   │   ├── register.component.ts      # Register component logic
+│   │   │   │   ├── register.component.html    # Register component template
+│   │   │   │   ├── register.component.css     # Register component styles
+│   │   │   │   └── register.component.spec.ts  # Register component tests
+│   │   │   ├── forgot-password/  # Forgot password page component
+│   │   │   │   ├── forgot-password.component.ts      # Component logic
+│   │   │   │   ├── forgot-password.component.html    # Component template
+│   │   │   │   ├── forgot-password.component.css     # Component styles
+│   │   │   │   └── forgot-password.component.spec.ts # Component tests
+│   │   │   ├── verify-otp/       # Verify OTP page component
+│   │   │   │   ├── verify-otp.component.ts      # Component logic
+│   │   │   │   ├── verify-otp.component.html    # Component template
+│   │   │   │   ├── verify-otp.component.css      # Component styles
+│   │   │   │   └── verify-otp.component.spec.ts  # Component tests
+│   │   │   └── create-password/  # Create/Reset password page component
+│   │   │       ├── create-password.component.ts      # Component logic
+│   │   │       ├── create-password.component.html    # Component template
+│   │   │       ├── create-password.component.css     # Component styles
+│   │   │       └── create-password.component.spec.ts # Component tests
+│   │   ├── models/           # Auth models
+│   │   ├── pages/            # Auth pages (container components if any)
+│   │   ├── services/         # Auth services
+│   │   └── auth.routes.ts    # Auth routing configuration
 │   ├── components/           # Feature-specific components
+│   │   └── .gitkeep
 │   ├── interfaces/           # TypeScript interfaces/models
+│   │   └── .gitkeep
 │   ├── pages/                # Feature pages
+│   │   └── .gitkeep
 │   └── services/             # Feature-specific services
+│       └── .gitkeep
 └── shared/                   # Shared module (reusable components, directives, pipes)
     ├── components/           # Shared components
     │   ├── business/         # Business logic components
+    │   │   └── .gitkeep
     │   └── UI/               # UI components (buttons, cards, etc.)
+    │       └── auth-promo/   # Auth promotional component
+    │           ├── auth-promo.ts      # Component logic
+    │           ├── auth-promo.html    # Component template
+    │           ├── auth-promo.css     # Component styles
+    │           └── auth-promo.spec.ts # Component tests
     ├── directives/           # Custom directives
+    │   └── .gitkeep
     ├── pipes/                # Custom pipes
+    │   └── .gitkeep
     └── services/             # Shared services
+        └── .gitkeep
+```
+
+## Library Project (`projects/auth/`)
+
+```
+projects/auth/
+├── ng-package.json          # ng-packagr configuration
+├── package.json             # Library package configuration
+├── README.md                # Library documentation
+├── tsconfig.lib.json        # TypeScript config for library
+├── tsconfig.lib.prod.json   # TypeScript config for production build
+├── tsconfig.spec.json       # TypeScript config for tests
+└── src/
+    ├── public-api.ts        # Public API exports (exports AuthService)
+    └── lib/                 # Library source code
+        ├── adaptor/         # Data adaptors
+        │   └── auth-api.adaptor.ts  # Adapts API responses (message, token, email, info, status)
+        ├── base/            # Base classes/interfaces
+        │   └── AuthAPI.ts   # Abstract base class for authentication API
+        ├── enums/           # Enumerations
+        │   └── AuthEndPoint.ts  # API endpoint constants
+        ├── interfaces/      # TypeScript interfaces
+        │   └── adaptor.ts   # Adaptor interface
+        ├── auth.service.ts  # Main auth service (implements AuthAPI)
+        └── auth.service.spec.ts  # Service tests
+```
+
+## Build Output (`dist/`)
+
+```
+dist/
+├── auth/                    # Built auth library
+│   ├── fesm2022/           # ES module format
+│   │   ├── auth.mjs        # Compiled JavaScript
+│   │   └── auth.mjs.map    # Source map
+│   ├── index.d.ts          # TypeScript declarations (bundled)
+│   ├── package.json        # Package manifest
+│   └── README.md           # Library README
+└── ExamAPP/                # Built application
+    └── browser/            # Browser build output
+        ├── index.html
+        ├── main.js
+        ├── styles.css
+        └── ...
 ```
 
 ## Directory Descriptions
 
 ### Core Module (`core/`)
-Contains application-wide singleton services, guards, interceptors, and core pages that are used across the entire application.
+Contains application-wide singleton services, guards, interceptors, and layouts that are used across the entire application.
 
 - **guards/**: Route guards for authentication and authorization
 - **interceptors/**: HTTP interceptors for request/response handling
 - **layouts/**: Main layout components (header, footer, sidebar, etc.)
-- **pages/**: Core pages like login, error pages, not found pages
 - **services/**: Singleton services (authentication, API, configuration)
 
 ### Features Module (`features/`)
 Contains feature-specific modules organized by domain/functionality. Each feature is self-contained with its own components, services, and pages.
 
+#### Auth Feature (`features/auth/`)
+- **components/**: Authentication components (Login, Register, Forgot Password, etc.)
+- **models/**: Auth-specific models
+- **pages/**: Auth container pages
+- **services/**: Auth-specific services
+- **auth.routes.ts**: Auth routing configuration
+
+#### General Features
 - **components/**: Feature-specific components
 - **interfaces/**: TypeScript interfaces and models for the feature
 - **pages/**: Feature pages/routes
@@ -85,21 +191,98 @@ Contains reusable components, directives, pipes, and services that can be used a
 - **components/**: 
   - **business/**: Components with business logic
   - **UI/**: Pure UI components (buttons, cards, modals, etc.)
+    - **auth-promo/**: Promotional component for authentication pages (displays features and benefits)
 - **directives/**: Custom Angular directives
 - **pipes/**: Custom Angular pipes for data transformation
 - **services/**: Shared utility services
+
+### Auth Library (`projects/auth/`)
+A reusable Angular library for authentication functionality.
+
+- **adaptor/**: Data transformation adaptors (converts API responses to standardized format)
+  - **auth-api.adaptor.ts**: Adapts API responses to include message, token, email, info, and status fields
+- **base/**: Base classes and abstract interfaces
+  - **AuthAPI.ts**: Abstract base class defining authentication methods (register, login, forgotPassword, verifyResetCode, resetPassword)
+- **enums/**: Enumeration constants
+  - **AuthEndPoint.ts**: API endpoint URLs (REGISTER, LOGIN, FORGOTPASSWORD, VERIFYRESETCODE, RESETPASSWORD, etc.)
+- **interfaces/**: TypeScript type definitions
+  - **adaptor.ts**: Adaptor interface definition
+- **auth.service.ts**: Main authentication service implementing AuthAPI with methods:
+  - `register(data)`: User registration
+  - `login(data)`: User login
+  - `forgotPassword(data)`: Request password reset OTP
+  - `verifyResetCode(data)`: Verify OTP code
+  - `resetPassword(data)`: Reset/create new password
+
+## Key Files
+
+### Application Files
+- `src/index.html`: Main HTML entry point (includes Font Awesome 6.5.1 CDN)
+- `src/main.ts`: Application bootstrap
+- `src/app/app.config.ts`: Application configuration (providers: HttpClient, Router, etc.)
+- `src/app/app.routes.ts`: Route definitions for authentication pages:
+  - `/auth/login` - Login page
+  - `/auth/register` - Registration page
+  - `/auth/forgot-password` - Forgot password page
+  - `/auth/verify-otp` - OTP verification page
+  - `/auth/create-password` - Create/reset password page
+
+### Library Files
+- `projects/auth/src/public-api.ts`: Public API exports for the library (exports AuthService)
+- `projects/auth/ng-package.json`: Library build configuration
+
+## Authentication Flow
+
+The application implements a complete password reset flow:
+
+1. **Forgot Password** (`/auth/forgot-password`):
+   - User enters email address
+   - Sends request to `POST /api/v1/auth/forgotPassword`
+   - On success, automatically navigates to verify OTP page
+
+2. **Verify OTP** (`/auth/verify-otp`):
+   - User enters 6-digit OTP code received via email
+   - Sends request to `POST /api/v1/auth/verifyResetCode`
+   - On success (`{"status":"Success"}`), navigates to create password page
+
+3. **Create Password** (`/auth/create-password`):
+   - User enters new password and confirmation
+   - Sends request to `PUT /api/v1/auth/resetPassword`
+   - On success, navigates to login page
 
 ## Architecture Notes
 
 This project follows a **feature-based architecture** with clear separation of concerns:
 
-1. **Core**: Application-wide functionality (singletons, guards, interceptors)
+1. **Core**: Application-wide functionality (singletons, guards, interceptors, authentication pages)
 2. **Features**: Domain-specific modules (self-contained features)
 3. **Shared**: Reusable components and utilities
+4. **Libraries**: Reusable Angular libraries (auth library)
 
 This structure promotes:
 - **Modularity**: Features are self-contained
-- **Reusability**: Shared components can be used across features
+- **Reusability**: Shared components and libraries can be used across features
 - **Maintainability**: Clear separation makes code easier to maintain
 - **Scalability**: Easy to add new features without affecting existing code
+- **Type Safety**: TypeScript interfaces and types throughout
+- **Angular 20 Compliance**: Uses modern Angular patterns (standalone components, `@if` control flow, `inject()` function)
 
+## Technology Stack
+
+- **Framework**: Angular 20
+- **Styling**: Tailwind CSS 4
+- **Icons**: Font Awesome 6.5.1 (via CDN)
+- **Build Tool**: Angular CLI with ng-packagr for libraries
+- **Language**: TypeScript 5.9
+- **Forms**: Angular Reactive Forms
+- **HTTP**: Angular HttpClient with RxJS Observables
+
+## Component Patterns
+
+All components follow Angular 20 best practices:
+- **Standalone Components**: All components are standalone
+- **Dependency Injection**: Uses `inject()` function instead of constructor injection
+- **Control Flow**: Uses `@if`, `@for` instead of `*ngIf`, `*ngFor`
+- **Form Handling**: Reactive Forms with FormBuilder
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Icons**: Font Awesome icons throughout (no SVG icons)
