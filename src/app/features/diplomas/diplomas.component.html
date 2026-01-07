@@ -12,7 +12,7 @@
 
     <!-- Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @for (diploma of diplomas(); track $index) {
+        @for (diploma of visibleDiplomas(); track $index) {
         <div class="relative rounded-lg overflow-hidden h-64 bg-gray-100 group cursor-pointer shadow-sm hover:shadow-md transition-shadow"
             routerLink="/exams" [queryParams]="{ subject: diploma._id }">
             <!-- Background Image -->
@@ -28,8 +28,10 @@
     </div>
 
     <!-- Scroll Indicator -->
+    @if (hasMoreDiplomas()) {
     <div class="mt-12 text-center">
         <p class="text-xs text-gray-400 font-mono mb-1">Scroll to view more</p>
         <i class="fas fa-chevron-down text-gray-300 text-xs animate-bounce"></i>
     </div>
+    }
 </div>
