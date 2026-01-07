@@ -1,0 +1,15 @@
+<div class="absolute bottom-16 right-6 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+    <!-- Account -->
+    <a routerLink="/settings"
+        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+        <i class="far fa-user w-4 mr-2"></i>
+        Account
+    </a>
+
+    <!-- Logout -->
+    <button (click)="logout.emit()"
+        class="w-full flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors text-left">
+        <i class="fas fa-sign-out-alt w-4 mr-2"></i>
+        Logout
+    </button>
+</div>

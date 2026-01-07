@@ -1,0 +1,135 @@
+<div class="p-10 max-w-6xl mx-auto">
+    <h2 class="text-2xl font-bold text-gray-800 mb-8">Account Settings</h2>
+
+    <div
+        class="bg-white rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden flex flex-col md:flex-row min-h-[600px]">
+        <!-- Settings Sidebar -->
+        <div class="w-full md:w-72 bg-gray-50/50 border-r border-gray-100 p-6 space-y-2">
+            <div (click)="activeTab.set('profile')"
+                class="cursor-pointer flex items-center px-5 py-4 rounded-2xl font-bold transition-all text-sm"
+                [ngClass]="activeTab() === 'profile' ? 'bg-blue-50 text-blue-600 border border-blue-100 shadow-sm' : 'text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow-sm'">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+                    [ngClass]="activeTab() === 'profile' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500'">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                Profile Info
+            </div>
+
+            <div (click)="activeTab.set('password')"
+                class="cursor-pointer flex items-center px-5 py-4 rounded-2xl font-bold transition-all text-sm"
+                [ngClass]="activeTab() === 'password' ? 'bg-blue-50 text-blue-600 border border-blue-100 shadow-sm' : 'text-gray-600 hover:bg-white hover:text-gray-900 hover:shadow-sm'">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+                    [ngClass]="activeTab() === 'password' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500'">
+                    <i class="fas fa-key"></i>
+                </div>
+                Password
+            </div>
+        </div>
+
+        <!-- Form Content -->
+        <div class="flex-1 p-10">
+            <!-- Profile Section -->
+            @if (activeTab() === 'profile') {
+            <div>
+                <div class="border-b border-gray-100 pb-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900">Personal Details</h3>
+                    <p class="text-gray-400 text-sm mt-1">Update your personal information here.</p>
+                </div>
+
+                <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-4 max-w-2xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <app-auth-input [control]="getControl(profileForm, 'firstName')" label="First Name"
+                            id="firstName" placeholder="Enter your first name">
+                        </app-auth-input>
+
+                        <app-auth-input [control]="getControl(profileForm, 'lastName')" label="Last Name" id="lastName"
+                            placeholder="Enter your last name">
+                        </app-auth-input>
+                    </div>
+
+                    <app-auth-input [control]="getControl(profileForm, 'email')" label="Email Address" type="email"
+                        id="email" placeholder="Enter your email address">
+                    </app-auth-input>
+
+                    <app-auth-input [control]="getControl(profileForm, 'phone')" label="Phone Number" type="tel"
+                        id="phone" placeholder="Enter your phone number">
+                    </app-auth-input>
+
+                    <div class="pt-8 border-t border-gray-100 flex justify-between gap-4 items-center">
+                        <button type="button" (click)="showDeleteModal.set(true)"
+                            class="px-8 py-3 text-red-500 font-bold hover:bg-red-50 rounded-xl transition-colors">
+                            Delete My Account
+                        </button>
+
+                        <div class="w-auto">
+                            <app-submit-button [buttonText]="'Save Changes'"
+                                [isLoading]="isLoading()"></app-submit-button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            }
+
+            <!-- Password Section -->
+            @if (activeTab() === 'password') {
+            <div>
+                <div class="border-b border-gray-100 pb-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900">Change Password</h3>
+                    <p class="text-gray-400 text-sm mt-1">Ensure your account uses a long, random password to stay
+                        secure.</p>
+                </div>
+
+                <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="space-y-4 max-w-2xl">
+                    <app-auth-input [control]="getControl(passwordForm, 'password')" label="Old Password"
+                        type="password" id="password" placeholder="Enter your old password">
+                    </app-auth-input>
+
+                    <app-auth-input [control]="getControl(passwordForm, 'newPassword')" label="New Password"
+                        type="password" id="newPassword" placeholder="Enter your new password">
+                    </app-auth-input>
+
+                    <app-auth-input [control]="getControl(passwordForm, 'rePassword')" label="Confirm New Password"
+                        type="password" id="rePassword" placeholder="Confirm your new password">
+                    </app-auth-input>
+
+                    <div class="pt-8 border-t border-gray-100 flex justify-end gap-4">
+                        <app-submit-button [buttonText]="'Update Password'"
+                            [isLoading]="isLoading()"></app-submit-button>
+                    </div>
+                </form>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Modal -->
+@if (showDeleteModal()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-200">
+        <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4 text-red-500 text-2xl">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Are you sure?</h3>
+            <p class="text-gray-500 mb-8">
+                Are you sure you want to delete your account? This action is permanent and cannot be undone.
+            </p>
+            <div class="flex gap-4 w-full">
+                <button (click)="showDeleteModal.set(false)"
+                    class="flex-1 px-6 py-3 text-gray-600 font-bold bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                    Cancel
+                </button>
+                <button (click)="deleteAccount()" [disabled]="isLoading()"
+                    class="flex-1 px-6 py-3 text-white font-bold bg-red-500 hover:bg-red-600 rounded-xl shadow-lg shadow-red-200 transition-all flex items-center justify-center">
+                    @if (!isLoading()) {
+                    <span>Yes, delete</span>
+                    } @else {
+                    <span><i class="fas fa-spinner fa-spin"></i></span>
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+}

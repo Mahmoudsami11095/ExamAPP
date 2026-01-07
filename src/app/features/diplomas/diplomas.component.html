@@ -1,0 +1,37 @@
+<div class="px-10 py-6 font-sans">
+    <!-- Breadcrumb -->
+    <div class="mb-6">
+        <span class="text-xs text-gray-400">Home</span>
+    </div>
+
+    <!-- Header Banner -->
+    <div class="bg-[#2563EB] rounded-lg p-6 flex items-center mb-8 shadow-md">
+        <i class="fas fa-graduation-cap text-white text-3xl mr-4"></i>
+        <h1 class="text-white text-2xl font-bold">Diplomas</h1>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (diploma of visibleDiplomas(); track $index) {
+        <div class="relative rounded-lg overflow-hidden h-64 bg-gray-100 group cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+            routerLink="/exams" [queryParams]="{ subject: diploma._id }">
+            <!-- Background Image -->
+            <img [src]="diploma.img" [alt]="diploma.title"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+
+            <!-- Overlay Content -->
+            <div class="absolute bottom-4 left-4 right-4 bg-[#2563EB]/90 backdrop-blur-sm p-3 rounded-lg">
+                <h3 class="text-white font-bold text-lg font-mono tracking-wide">{{diploma.title}}</h3>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Scroll Indicator -->
+    @if (hasMoreDiplomas()) {
+    <div class="mt-12 text-center">
+        <p class="text-xs text-gray-400 font-mono mb-1">Scroll to view more</p>
+        <i class="fas fa-chevron-down text-gray-300 text-xs animate-bounce"></i>
+    </div>
+    }
+</div>

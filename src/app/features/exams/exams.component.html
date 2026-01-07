@@ -1,0 +1,43 @@
+<div class="p-6 font-sans">
+    <!-- Header -->
+    <div class="bg-[#2563EB] rounded-t-lg p-4 flex items-center gap-4 text-white shadow-md mb-6">
+        <button routerLink="/diplomas" class="hover:bg-white/10 p-1 rounded transition-colors">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="flex items-center gap-2">
+            <i class="fas fa-book-open"></i>
+            <h1 class="text-xl font-bold">Exams</h1>
+        </div>
+    </div>
+
+    <!-- Exams List -->
+    <div class="space-y-4">
+        @for (exam of exams(); track exam._id) {
+        <div class="bg-[#F0F8FF] rounded-lg p-4 flex justify-between items-center hover:shadow-md transition-shadow cursor-pointer"
+            [routerLink]="['/quiz', exam._id]">
+
+            <!-- Left Side: Title & Questions -->
+            <div>
+                <h3 class="text-[#2563EB] font-bold text-lg mb-1">{{exam.title}}</h3>
+                <p class="text-gray-500 text-xs">{{exam.numberOfQuestions}} Questions</p>
+            </div>
+
+            <!-- Right Side: Duration -->
+            <div class="text-gray-600 text-sm font-mono flex items-center gap-2">
+                <i class="far fa-clock"></i>
+                <span>Duration: {{exam.duration}} minutes</span>
+            </div>
+        </div>
+        }
+        @empty {
+        <div class="text-center py-10 text-gray-400">
+            No exams found.
+        </div>
+        }
+    </div>
+
+    <!-- End of List -->
+    <div class="text-center mt-8 mb-4">
+        <p class="text-xs text-gray-400 font-mono">End of list</p>
+    </div>
+</div>

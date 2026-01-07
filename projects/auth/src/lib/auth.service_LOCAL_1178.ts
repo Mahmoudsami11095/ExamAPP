@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoginResponse, StatusResponse, InfoResponse, MessageResponse, UserInfoResponse } from './interfaces/auth-responses';
-import { LoginRequest, RegisterRequest, ForgotPasswordRequest, VerifyResetCodeRequest, ResetPasswordRequest, ChangePasswordRequest, EditProfileRequest } from './interfaces/auth-requests';
+import { LoginRequest, RegisterRequest, ForgotPasswordRequest, VerifyResetCodeRequest, ResetPasswordRequest } from './interfaces/auth-requests';
 import { AuthAdapterService } from './adaptor/auth.adapter';
 import { AuthEndPoint } from './enums/AuthEndPoint';
 import { AuthAPI } from './base/AuthAPI';
@@ -54,27 +54,6 @@ export class AuthService implements AuthAPI {
     return this._httpClient.put<MessageResponse>(this.getUrl(AuthEndPoint.RESETPASSWORD), data)
       .pipe(
         map((response) => this._authAdapterService.adaptMessage(response))
-      );
-  }
-
-  changePassword(data: ChangePasswordRequest): Observable<MessageResponse> {
-    return this._httpClient.patch<MessageResponse>(this.getUrl(AuthEndPoint.CHANGEPASSWORD), data)
-      .pipe(
-        map((response) => this._authAdapterService.adaptMessage(response))
-      );
-  }
-
-  deleteAccount(): Observable<MessageResponse> {
-    return this._httpClient.delete<MessageResponse>(this.getUrl(AuthEndPoint.DELETEMYACCOUNT))
-      .pipe(
-        map((response) => this._authAdapterService.adaptMessage(response))
-      );
-  }
-
-  editProfile(data: EditProfileRequest): Observable<UserInfoResponse> {
-    return this._httpClient.put<UserInfoResponse>(this.getUrl(AuthEndPoint.EDITPROFILE), data)
-      .pipe(
-        map((response) => response)
       );
   }
 

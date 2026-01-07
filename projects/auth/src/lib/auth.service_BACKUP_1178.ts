@@ -2,8 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoginResponse, StatusResponse, InfoResponse, MessageResponse, UserInfoResponse } from './interfaces/auth-responses';
-import { LoginRequest, RegisterRequest, ForgotPasswordRequest, VerifyResetCodeRequest, ResetPasswordRequest, ChangePasswordRequest, EditProfileRequest } from './interfaces/auth-requests';
+<<<<<<< HEAD
+import { LoginRequest, RegisterRequest, ForgotPasswordRequest, VerifyResetCodeRequest, ResetPasswordRequest } from './interfaces/auth-requests';
 import { AuthAdapterService } from './adaptor/auth.adapter';
+=======
+import { LoginRequest, RegisterRequest, ForgotPasswordRequest, VerifyResetCodeRequest, ResetPasswordRequest, ChangePasswordRequest, EditProfileRequest } from './interfaces/auth-requests';
+import { AuthAPIAdaptorService } from './adaptor/auth-api.adaptor';
+import { AuthStatusAdaptorService } from './adaptor/auth-status.adaptor';
+import { AuthInfoAdaptorService } from './adaptor/auth-info.adaptor';
+import { AuthMessageAdaptorService } from './adaptor/auth-message.adaptor';
+>>>>>>> 8fe8c97 (Implement setting component  including (Profile info and password change))
 import { AuthEndPoint } from './enums/AuthEndPoint';
 import { AuthAPI } from './base/AuthAPI';
 import { AUTH_BASE_URL } from './tokens/auth-base-url.token';
@@ -60,14 +68,14 @@ export class AuthService implements AuthAPI {
   changePassword(data: ChangePasswordRequest): Observable<MessageResponse> {
     return this._httpClient.patch<MessageResponse>(this.getUrl(AuthEndPoint.CHANGEPASSWORD), data)
       .pipe(
-        map((response) => this._authAdapterService.adaptMessage(response))
+        map((response) => this._authMessageAdaptorService.adapt(response))
       );
   }
 
   deleteAccount(): Observable<MessageResponse> {
     return this._httpClient.delete<MessageResponse>(this.getUrl(AuthEndPoint.DELETEMYACCOUNT))
       .pipe(
-        map((response) => this._authAdapterService.adaptMessage(response))
+        map((response) => this._authMessageAdaptorService.adapt(response))
       );
   }
 

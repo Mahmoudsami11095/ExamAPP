@@ -1,0 +1,70 @@
+<aside class="w-64 bg-white border-r border-gray-100 flex flex-col fixed h-full z-20 font-sans">
+    <!-- Logo Section -->
+    <div class="pt-10 px-8 pb-8">
+        <h1 class="text-4xl font-extrabold text-[#191919] tracking-tighter leading-none mb-1"
+            style="font-family: 'Inter', sans-serif;">ELEVATE</h1>
+        <span
+            class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#EBF5FF] text-[#2563EB] text-xs font-bold uppercase tracking-wider shadow-sm">
+            <i class="fas fa-code text-[10px]"></i> Exam App
+        </span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 px-4 mt-6 space-y-1">
+        <a routerLink="/diplomas" routerLinkActive="bg-[#EBF5FF] text-[#2563EB]"
+            class="flex items-center px-4 py-3 text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-600 transition-all duration-200 group font-bold text-sm">
+            <i class="fas fa-graduation-cap w-5 h-5 mr-3 text-lg"></i>
+            <span>Diplomas</span>
+        </a>
+
+        <!-- Account Settings -->
+        <a routerLink="/settings" routerLinkActive="bg-[#EBF5FF] text-[#2563EB]"
+            class="flex items-center px-4 py-3 text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-600 transition-all duration-200 group font-bold text-sm">
+            <i class="far fa-user w-5 h-5 mr-3 text-lg"></i>
+            <span>Account Settings</span>
+        </a>
+    </nav>
+
+    <!-- User Footer -->
+    <div class="p-6 relative">
+        @if (user()) {
+
+        @if (isDropdownOpen()) {
+        <div class="absolute bottom-16 right-6 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+            <!-- Account -->
+            <a routerLink="/settings"
+                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                <i class="far fa-user w-4 mr-2"></i>
+                Account
+            </a>
+
+            <!-- Logout -->
+            <button (click)="logout()"
+                class="w-full flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors text-left">
+                <i class="fas fa-sign-out-alt w-4 mr-2"></i>
+                Logout
+            </button>
+        </div>
+        }
+
+        <div class="flex items-center gap-3">
+            <div
+                class="h-12 w-12 rounded-lg overflow-hidden border border-gray-200 shadow-sm shrink-0 flex items-center justify-center bg-gray-100">
+                @if (profileImage()) {
+                <img [src]="profileImage()" alt="User" class="h-full w-full object-cover">
+                } @else {
+                <span class="text-gray-500 font-bold text-lg">{{initials()}}</span>
+                }
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-[#2563EB] truncate">{{firstName()}} {{lastName()}}</p>
+                <p class="text-[10px] text-gray-400 truncate">{{email()}}</p>
+            </div>
+            <button (click)="toggleDropdown()"
+                class="text-gray-300 hover:text-gray-500 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-50">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+        </div>
+        }
+    </div>
+</aside>

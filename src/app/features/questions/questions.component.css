@@ -1,0 +1,3 @@
+.donut-chart-fill {
+    background: conic-gradient(#10B981 var(--chart-percent, 0%), #EF4444 0);
+}
