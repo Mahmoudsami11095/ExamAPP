@@ -73,9 +73,13 @@
 
         <!-- Next / Finish -->
         @if (store.currentQuestionIndex() === store.questions().length - 1) {
-        <button (click)="store.submitQuiz()" [disabled]="!store.selectedOption()"
+        <button (click)="store.submitQuiz()" [disabled]="!store.selectedOption() || store.isLoading()"
             class="px-12 py-3 bg-green-600 text-white rounded-lg font-bold text-sm hover:bg-green-700 transition-colors shadow-lg shadow-green-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">
+            @if (store.isLoading()) {
+            <i class="fas fa-spinner fa-spin mr-2"></i> Submitting...
+            } @else {
             Finish <i class="fas fa-check ml-2"></i>
+            }
         </button>
         } @else {
         <button (click)="store.nextQuestion()" [disabled]="!store.selectedOption()"

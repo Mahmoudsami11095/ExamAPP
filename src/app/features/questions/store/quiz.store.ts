@@ -185,6 +185,7 @@ export const QuizStore = signalStore(
 
             submitQuiz: rxMethod<void>((trigger$) =>
                 trigger$.pipe(
+                    tap(() => patchState(store, { isLoading: true })),
                     switchMap(() => {
                         const answers = Array.from(store.userAnswers().entries()).map(([questionId, correct]) => ({
                             questionId,
@@ -195,11 +196,12 @@ export const QuizStore = signalStore(
                         return questionsService.checkQuestions(answers).pipe(
                             tapResponse({
                                 next: (result: QuizResult) => {
-                                    patchState(store, { quizResult: result, isSubmitted: true });
+                                    patchState(store, { quizResult: result, isSubmitted: true, isLoading: false });
                                     toastr.success('Quiz Submitted Successfully!', 'Success');
                                 },
                                 error: (err: HttpErrorResponse) => {
                                     console.error(err);
+                                    patchState(store, { isLoading: false });
                                     toastr.error('Failed to submit quiz.', 'Error');
                                 }
                             })
