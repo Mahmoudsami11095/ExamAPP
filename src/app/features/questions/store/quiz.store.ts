@@ -6,7 +6,7 @@ import { QuestionsService } from '../services/questions.service';
 import { ExamsService } from '../../exams/services/exams.service';
 import { ToastrService } from 'ngx-toastr';
 import { tapResponse } from '@ngrx/operators';
-import { switchMap, tap } from 'rxjs';
+import { switchMap, tap, forkJoin } from 'rxjs';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -79,14 +79,15 @@ export const QuizStore = signalStore(
                 id$.pipe(
                     tap(() => patchState(store, { isLoading: true })),
                     switchMap((id) => {
-                        examsService.getExamById(id).subscribe(exam => patchState(store, { exam }));
-
-                        return questionsService.getQuestionsByExam(id).pipe(
+                        return forkJoin({
+                            exam: examsService.getExamById(id),
+                            questions: questionsService.getQuestionsByExam(id)
+                        }).pipe(
                             tapResponse({
-                                next: (questions: Question[]) => {
-                                    patchState(store, { questions, isLoading: false });
-                                    if (store.exam()?.duration) {
-                                        const totalSeconds = store.exam()!.duration * 60;
+                                next: ({ exam, questions }) => {
+                                    patchState(store, { exam, questions, isLoading: false });
+                                    if (exam.duration) {
+                                        const totalSeconds = exam.duration * 60;
                                         patchState(store, { totalTime: totalSeconds, timeLeft: totalSeconds });
                                         // Start timer
                                         if (timerInterval) clearInterval(timerInterval);
