@@ -60,14 +60,14 @@ export class AuthService implements AuthAPI {
   changePassword(data: ChangePasswordRequest): Observable<MessageResponse> {
     return this._httpClient.patch<MessageResponse>(this.getUrl(AuthEndPoint.CHANGEPASSWORD), data)
       .pipe(
-        map((response) => this._authMessageAdaptorService.adapt(response))
+        map((response) => this._authAdapterService.adaptMessage(response))
       );
   }
 
   deleteAccount(): Observable<MessageResponse> {
     return this._httpClient.delete<MessageResponse>(this.getUrl(AuthEndPoint.DELETEMYACCOUNT))
       .pipe(
-        map((response) => this._authMessageAdaptorService.adapt(response))
+        map((response) => this._authAdapterService.adaptMessage(response))
       );
   }
 
