@@ -29,7 +29,8 @@
         <!-- Form Content -->
         <div class="flex-1 p-10">
             <!-- Profile Section -->
-            <div *ngIf="activeTab() === 'profile'">
+            @if (activeTab() === 'profile') {
+            <div>
                 <div class="border-b border-gray-100 pb-6 mb-8">
                     <h3 class="text-xl font-bold text-gray-900">Personal Details</h3>
                     <p class="text-gray-400 text-sm mt-1">Update your personal information here.</p>
@@ -67,9 +68,11 @@
                     </div>
                 </form>
             </div>
+            }
 
             <!-- Password Section -->
-            <div *ngIf="activeTab() === 'password'">
+            @if (activeTab() === 'password') {
+            <div>
                 <div class="border-b border-gray-100 pb-6 mb-8">
                     <h3 class="text-xl font-bold text-gray-900">Change Password</h3>
                     <p class="text-gray-400 text-sm mt-1">Ensure your account uses a long, random password to stay
@@ -95,13 +98,14 @@
                     </div>
                 </form>
             </div>
+            }
         </div>
     </div>
 </div>
 
 <!-- Delete Account Modal -->
-<div *ngIf="showDeleteModal()"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+@if (showDeleteModal()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-200">
         <div class="flex flex-col items-center text-center">
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4 text-red-500 text-2xl">
@@ -118,10 +122,14 @@
                 </button>
                 <button (click)="deleteAccount()" [disabled]="isLoading()"
                     class="flex-1 px-6 py-3 text-white font-bold bg-red-500 hover:bg-red-600 rounded-xl shadow-lg shadow-red-200 transition-all flex items-center justify-center">
-                    <span *ngIf="!isLoading()">Yes, delete</span>
-                    <span *ngIf="isLoading()"><i class="fas fa-spinner fa-spin"></i></span>
+                    @if (!isLoading()) {
+                    <span>Yes, delete</span>
+                    } @else {
+                    <span><i class="fas fa-spinner fa-spin"></i></span>
+                    }
                 </button>
             </div>
         </div>
     </div>
 </div>
+}
