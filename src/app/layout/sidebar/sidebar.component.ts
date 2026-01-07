@@ -18,7 +18,13 @@ export class SidebarComponent implements OnInit {
   firstName = computed(() => this.user()?.firstName ?? '');
   lastName = computed(() => this.user()?.lastName ?? '');
   email = computed(() => this.user()?.email ?? '');
-  profileImage = computed(() => this.user()?._id ? `https://i.pravatar.cc/150?u=${this.user()?._id}` : '');
+  // profileImage = computed(() => this.user()?._id ? `https://i.pravatar.cc/150?u=${this.user()?._id}` : '');
+  profileImage = computed(() => ''); // Placeholder until real image field is known
+  initials = computed(() => {
+    const f = this.firstName().charAt(0).toUpperCase();
+    const l = this.lastName().charAt(0).toUpperCase();
+    return `${f}${l}`;
+  });
 
   ngOnInit(): void {
     this._authService.getLoggedUserInfo().subscribe({
