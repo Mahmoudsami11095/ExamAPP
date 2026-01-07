@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, effect, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, signal, effect, WritableSignal, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -8,13 +8,15 @@ import { AuthInputComponent } from '../../shared/components/UI/auth-input/auth-i
 import { SubmitButtonComponent } from '../../shared/components/UI/submit-button/submit-button.component';
 import { passwordMatchValidator } from '../../shared/validators/password-match.validator';
 
+import { Subject, takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-settings',
   imports: [ReactiveFormsModule, CommonModule, AuthInputComponent, SubmitButtonComponent],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
   getControl(form: FormGroup, controlName: string): FormControl {
     return form.get(controlName) as FormControl;
   }
@@ -22,6 +24,7 @@ export class SettingsComponent implements OnInit {
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
   private router = inject(Router);
+  private destroy$ = new Subject<void>();
 
   activeTab: WritableSignal<'profile' | 'password'> = signal('profile');
   showDeleteModal = signal(false);
@@ -62,7 +65,7 @@ export class SettingsComponent implements OnInit {
   }
 
   getUserInfo() {
-    this.authService.getLoggedUserInfo().subscribe({
+    this.authService.getLoggedUserInfo().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.userData.set(res.user);
       },
@@ -79,7 +82,7 @@ export class SettingsComponent implements OnInit {
     }
     this.isLoading.set(true);
     const data: EditProfileRequest = this.profileForm.getRawValue();
-    this.authService.editProfile(data).subscribe({
+    this.authService.editProfile(data).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.isLoading.set(false);
         this.toastr.success('Profile updated successfully');
@@ -109,7 +112,7 @@ export class SettingsComponent implements OnInit {
       rePassword: this.passwordForm.value.rePassword
     };
 
-    this.authService.changePassword(data).subscribe({
+    this.authService.changePassword(data).pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.isLoading.set(false);
         this.toastr.success('Password updated successfully. Please login again.');
@@ -126,7 +129,7 @@ export class SettingsComponent implements OnInit {
 
   deleteAccount() {
     this.isLoading.set(true);
-    this.authService.deleteAccount().subscribe({
+    this.authService.deleteAccount().pipe(takeUntil(this.destroy$)).subscribe({
       next: (res) => {
         this.isLoading.set(false);
         this.toastr.success('Account deleted');
@@ -138,5 +141,9 @@ export class SettingsComponent implements OnInit {
         this.toastr.error('Failed to delete account');
       }
     });
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
