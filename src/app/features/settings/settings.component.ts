@@ -6,6 +6,7 @@ import { AuthService, ChangePasswordRequest, EditProfileRequest } from 'auth';
 import { ToastrService } from 'ngx-toastr';
 import { AuthInputComponent } from '../../shared/components/UI/auth-input/auth-input.component';
 import { SubmitButtonComponent } from '../../shared/components/UI/submit-button/submit-button.component';
+import { passwordMatchValidator } from '../../shared/validators/password-match.validator';
 
 @Component({
   selector: 'app-settings',
@@ -36,8 +37,10 @@ export class SettingsComponent implements OnInit {
 
   passwordForm: FormGroup = this.fb.group({
     password: ['', [Validators.required]],
-    newPassword: ['', [Validators.required, Validators.minLength(6)]],
+    newPassword: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/)]],
     rePassword: ['', [Validators.required]]
+  }, {
+    validators: passwordMatchValidator('newPassword', 'rePassword')
   });
 
   constructor() {
